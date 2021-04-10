@@ -7,12 +7,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component';
+import { RolesComponent } from 'src/app/pages/roles/roles.component';
 
 
 
 @NgModule({
   declarations: [
-    DashboardComponent
+    DashboardComponent,
+    RolesComponent
   ],
   imports: [
     CommonModule,

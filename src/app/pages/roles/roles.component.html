@@ -1,0 +1,40 @@
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div
+          class="card-header border-0 text-white d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Roles</h3>
+          <button class="btn btn-success btn-sm">
+            <i class="ni ni-fat-add">Crear roles</i>
+          </button>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let role of roles">
+                <td>{{ role.id_roles }}</td>
+                <td>{{ role.name_role }}</td>
+                <td>{{ role.description_role }}</td>
+                <td>{{ role.role_status }}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
