@@ -1,38 +1,104 @@
+<!-- modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Roles</h4>
+    <button type="button" id="closeModal" class="close" aria-label="Close"
+      (click)="submitted = false; d('Cross click');close(); edit = false">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form autocomplete="off">
+      <input type="hidden" name="id_roles" [(ngModel)]="role.id_roles">
+      <div class="form-row">
+        <div class="form group col-md-12">
+          <label class="control-label">Nombre</label>
+          <input class="form-control" type="text" name="name_role" [(ngModel)]="role.name_role" placeholder="Nombre rol"
+            autofocus>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label class="control-label">Descripción</label>
+          <textarea class="form-control" name="description_role" [(ngModel)]="role.description_role" rows="2"
+            placeholder="Descripción del rol" required=""></textarea>
+        </div>
+      </div>
+      <div class="form row">
+        <div class="from-group col-md-12">
+          <label class="control-label" for="role_status">Estado</label>
+          <select class="form-control" name="role_status" [(ngModel)]="role.role_status">
+            <option value="0">Seleccione...</option>
+            <option value="1">Activo</option>
+            <option value="2">Inactivo</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click'); close(); edit = false">
+      Cerrar
+    </button>
+    <button class="btn btn-success" (click)="edit ? updateRole() : saveRole()">
+      Guardar
+    </button>
+  </div>
+</ng-template>
 <!-- Page content -->
 <div class="container-fluid mt--7">
   <!-- Table -->
   <div class="row">
     <div class="col">
       <div class="card shadow">
-        <div
-          class="card-header border-0 text-white d-flex justify-content-between align-items-center"
-        >
+        <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
           <h3 class="mb-0">Roles</h3>
-          <button class="btn btn-success btn-sm">
+          <button class="btn btn-success btn-sm" (click)="open(content)">
             <i class="ni ni-fat-add">Crear roles</i>
           </button>
         </div>
-        <div class="table-responsive">
-          <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Descripcion</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let role of roles">
-                <td>{{ role.id_roles }}</td>
-                <td>{{ role.name_role }}</td>
-                <td>{{ role.description_role }}</td>
-                <td>{{ role.role_status }}</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+              class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Descripcion</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let role of roles; let indice = index">
+                  <td>{{ indice + 1 }}</td>
+                  <td>{{ role.name_role }}</td>
+                  <td>{{ role.description_role }}</td>
+                  <td *ngIf="role.role_status == 1; else opposite_case">
+                    <span class="badge badge-success">Activo</span>
+                  </td>
+                  <ng-template #opposite_case>
+                    <td>
+                      <span class="badge badge-danger">Cerrado</span>
+                    </td>
+                  </ng-template>
+                  <td>
+                    <div class="btn-group btn-group-sm text-center">
+                      <button class="btn btn-primary btn-sm" title="Editar"
+                        (click)="getRole(role.id_roles); open(content)">
+                        <i class="fas fa-pencil-alt"></i>
+                      </button>
+                      <button class="btn btn-danger btn-sm" title="Eliminar" (click)="deleteRole(role.id_roles)">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
