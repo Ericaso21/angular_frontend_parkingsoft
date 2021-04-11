@@ -10,8 +10,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
 import { TemplateComponent } from './layouts/template/template.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-
+import { DataTablesModule } from 'angular-datatables';
+import { RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha';
+import { ketRecaptcha } from '../environments/environment.prod'
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,9 +26,13 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
     ComponentsModule,
     NgbModule,
     RouterModule,
-    AppRoutingModule
+    AppRoutingModule,
+    DataTablesModule,
+    RecaptchaV3Module
   ],
-  providers: [],
+  providers: [
+    { provide: RECAPTCHA_V3_SITE_KEY, useValue: ketRecaptcha.key}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
