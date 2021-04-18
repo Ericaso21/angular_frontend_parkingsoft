@@ -12,7 +12,7 @@ import { AppRoutingModule } from './app.routing';
 import { TemplateComponent } from './layouts/template/template.component';
 import { DataTablesModule } from 'angular-datatables';
 import { RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha';
-import { ketRecaptcha } from '../environments/environment.prod'
+import { ketRecaptcha } from '../environments/environment.prod';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +31,7 @@ import { ketRecaptcha } from '../environments/environment.prod'
     RecaptchaV3Module
   ],
   providers: [
-    { provide: RECAPTCHA_V3_SITE_KEY, useValue: ketRecaptcha.key}
+    { provide: RECAPTCHA_V3_SITE_KEY, useValue: ketRecaptcha.key }
   ],
   bootstrap: [AppComponent]
 })
