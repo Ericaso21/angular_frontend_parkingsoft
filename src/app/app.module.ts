@@ -12,7 +12,8 @@ import { AppRoutingModule } from './app.routing';
 import { TemplateComponent } from './layouts/template/template.component';
 import { DataTablesModule } from 'angular-datatables';
 import { RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha';
-import { ketRecaptcha } from '../environments/environment.prod'
+import { ketRecaptcha } from '../environments/environment.prod';
+
 @NgModule({
   declarations: [
     AppComponent,
