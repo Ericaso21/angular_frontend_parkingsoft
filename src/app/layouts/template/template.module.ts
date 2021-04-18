@@ -9,13 +9,15 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component';
 import { RolesComponent } from 'src/app/pages/roles/roles.component';
 import { DataTablesModule } from 'angular-datatables';
+import { BlockTypesComponent } from 'src/app/pages/block-types/block-types.component';
 
 
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    RolesComponent
+    RolesComponent,
+    BlockTypesComponent
   ],
   imports: [
     CommonModule,

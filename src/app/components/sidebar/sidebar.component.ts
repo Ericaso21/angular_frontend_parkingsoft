@@ -10,8 +10,11 @@ declare interface RouteInfo {
 
 export const ROUTES: RouteInfo[] = [
   { path: '/dashboard', title: 'Dashboard', icon: 'ni-tv-2 text-primary', class: ''},
-  { path: '/roles', title: 'Roles', icon: 'ni-single-02 text-primary', class: ''}
+  { path: '/roles', title: 'Roles', icon: 'ni-single-02 text-primary', class: ''},
+  {path: '/blocktypes', title: 'Tipos de Bloque', icon:'ni ni-ungroup text-primary',class:''}
 ]
+
+
 
 @Component({
   selector: 'app-sidebar',
