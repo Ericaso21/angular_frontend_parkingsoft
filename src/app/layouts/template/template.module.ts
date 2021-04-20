@@ -9,6 +9,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component';
 import { RolesComponent } from 'src/app/pages/roles/roles.component';
 import { DataTablesModule } from 'angular-datatables';
+import { BlockTypesComponent } from 'src/app/pages/block-types/block-types.component';
 import { RatesComponent } from 'src/app/pages/rates/rates.component';
 import { VehicleTypesComponent } from 'src/app/pages/vehicle-types/vehicle-types.component';
 import { UserComponent } from 'src/app/pages/user/user.component';
@@ -18,10 +19,10 @@ import { UserComponent } from 'src/app/pages/user/user.component';
   declarations: [
     DashboardComponent,
     RolesComponent,
+    BlockTypesComponent,
     RatesComponent,
     VehicleTypesComponent,
     UserComponent
-
   ],
   
   imports: [
