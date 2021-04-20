@@ -64,26 +64,15 @@
               class="table align-items-center table-flush">
               <thead class="thead-light">
                 <tr>
+                  <th scope="col">Acciones</th>
                   <th scope="col">#</th>
                   <th scope="col">Nombre</th>
                   <th scope="col">Descripcion</th>
                   <th scope="col">Estado</th>
-                  <th scope="col">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let role of roles; let indice = index">
-                  <td>{{ indice + 1 }}</td>
-                  <td>{{ role.name_role }}</td>
-                  <td>{{ role.description_role }}</td>
-                  <td *ngIf="role.role_status == 1; else opposite_case">
-                    <span class="badge badge-success">Activo</span>
-                  </td>
-                  <ng-template #opposite_case>
-                    <td>
-                      <span class="badge badge-danger">Cerrado</span>
-                    </td>
-                  </ng-template>
                   <td>
                     <div class="btn-group btn-group-sm text-center">
                       <button class="btn btn-primary btn-sm" title="Editar"
@@ -95,6 +84,17 @@
                       </button>
                     </div>
                   </td>
+                  <td>{{ indice + 1 }}</td>
+                  <td>{{ role.name_role }}</td>
+                  <td>{{ role.description_role }}</td>
+                  <td *ngIf="role.role_status == 1; else opposite_case">
+                    <span class="badge badge-success">Activo</span>
+                  </td>
+                  <ng-template #opposite_case>
+                    <td>
+                      <span class="badge badge-danger">Cerrado</span>
+                    </td>
+                  </ng-template>
                 </tr>
               </tbody>
             </table>

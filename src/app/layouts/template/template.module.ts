@@ -10,15 +10,16 @@ import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component'
 import { RolesComponent } from 'src/app/pages/roles/roles.component';
 import { DataTablesModule } from 'angular-datatables';
 import { VehicleTypesComponent } from 'src/app/pages/vehicle-types/vehicle-types.component';
-
-
+import { UserComponent } from 'src/app/pages/user/user.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     RolesComponent,
-    VehicleTypesComponent
+    VehicleTypesComponent,
+    UserComponent
   ],
+  
   imports: [
     CommonModule,
     RouterModule.forChild(TemplateRoutingModule),

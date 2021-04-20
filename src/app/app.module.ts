@@ -32,7 +32,7 @@ import { ketRecaptcha } from '../environments/environment.prod';
     RecaptchaV3Module
   ],
   providers: [
-    { provide: RECAPTCHA_V3_SITE_KEY, useValue: ketRecaptcha.key}
+    { provide: RECAPTCHA_V3_SITE_KEY, useValue: ketRecaptcha.key }
   ],
   bootstrap: [AppComponent]
 })

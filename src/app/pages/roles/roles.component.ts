@@ -61,6 +61,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.dtOptions = {
+      responsive: true,
       processing: true,
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -69,7 +70,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       },
       destroy: true,
       autoWidth: true,
-      order: [0, 'asc']
+      order: [1, 'asc']
     };
   }
 
@@ -152,14 +153,14 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
             },
             (error: any) => {
               if (error['status'] == 404) {
-                Swal.fire('¡Error!', error['message'], 'error');
+                Swal.fire('¡Error!', error['error']['message'], 'error');
               }
             }
           )
         }
       },
       (error: any) => {
-
+        console.log(error);
       }
     )
   }
@@ -177,7 +178,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
           },
           (error: any) => {
             if (error['status'] == 404) {
-              Swal.fire('¡Error!', error['message'], 'error');
+              Swal.fire('¡Error!', error['error']['message'], 'error');
             }
           }
         )
@@ -211,7 +212,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
               },
               (error: any) => {
                 if (error['status'] == 404) {
-                  Swal.fire('¡Error!', error['message'], 'error');
+                  Swal.fire('¡Error!', error['error']['message'], 'error');
                 }
               }
             )
