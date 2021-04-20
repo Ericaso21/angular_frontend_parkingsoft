@@ -1,0 +1,124 @@
+<!-- modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Roles</h4>
+    <button type="button" id="closeModal" class="close" aria-label="Close"
+      (click)="submitted = false; d('Cross click');close(); edit = false">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form autocomplete="off">
+      <input type="hidden" name="id_rate" [(ngModel)]="rates.id_rate">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label class="control-label">Valor Minuto</label>
+          <input class="form-control" type="text" name="minute_rate" [(ngModel)]="rate.minute_rate"
+            placeholder="Valor Minuto" autofocus>
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">Valor Hora</label>
+          <input class="form-control" type="text" name="hourly_rate" [(ngModel)]="rate.hourly_rate"
+            placeholder="Valor Hora">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label class="control-label">Valor Dia</label>
+          <input class="form-control" type="text" name="day_rate" [(ngModel)]="rate.day_rate" placeholder="Valor Dia">
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">Tipo Vehiculo</label>
+          <select class="form-control" name="fk_id_vehicle_type " [(ngModel)]="rate.fk_id_vehicle_type">
+            <option value="0">Seleccione</option>
+            <option *ngFor="let vehicleTypes of vehicleType" [value]="vehicleTypes.id_vehicle_type">
+              {{vehicleTypes.vehicle_name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label class="control-label">Estado</label>
+          <select class="form-control" name="rate_status" [(ngModel)]="rate.rate_status">
+            <option value="0">Seleccione</option>
+            <option value="1">Activo</option>
+            <option value="2">Inactivo</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click'); close(); edit = false">
+      Cerrar
+    </button>
+    <button class="btn btn-success" (click)="edit ? updateRate() : saveRate()">
+      Guardar
+    </button>
+  </div>
+</ng-template>
+
+
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
+          <h3 class="mb-0">Tarifas</h3>
+          <button class="btn btn-success btn-sm" (click)="open(content)">
+            <i class="ni ni-fat-add">Crear Tarifas</i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+              class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Tipo Vehiculo</th>
+                  <th scope="col">Valor Minuto</th>
+                  <th scope="col">Valor Hora</th>
+                  <th scope="col">Valor Dia</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rate of rates; let indice = index">
+                  <td>{{ indice + 1 }}</td>
+                  <td>{{ rate.vehicle_name }}</td>
+                  <td>{{ rate.minute_rate }}</td>
+                  <td>{{ rate.hourly_rate }}</td>
+                  <td>{{ rate.day_rate }}</td>
+                  <td *ngIf="rate.rate_status == 1; else opposite_case">
+                    <span class="badge badge-success">Activo</span>
+                  </td>
+                  <ng-template #opposite_case>
+                    <td>
+                      <span class="badge badge-danger">Cerrado</span>
+                    </td>
+                  </ng-template>
+                  <td>
+                    <div class="btn-group btn-group-sm text-center">
+                      <button class="btn btn-primary btn-sm" title="Editar"
+                        (click)="getRate(rate.id_rate); open(content)">
+                        <i class="fas fa-pencil-alt"></i>
+                      </button>
+                      <button class="btn btn-danger btn-sm" title="Eliminar" (click)="deleteRate(rate.id_rate)">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
