@@ -3,65 +3,63 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subject } from 'rxjs';
-import { Roles } from 'src/app/interfaces/roles';
-import { RolesService } from 'src/app/services/roles.service';
+import { VehicleTypes } from 'src/app/interfaces/vehicle-types';
+import { VehicleTypesService } from 'src/app/services/vehicle-types.service';
 import Swal from 'sweetalert2';
+
 @Component({
-  selector: 'app-roles',
-  templateUrl: './roles.component.html',
+  selector: 'app-vehicle-types',
+  templateUrl: './vehicle-types.component.html',
   styles: [
   ]
 })
-export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
+export class VehicleTypesComponent implements OnInit, AfterViewInit,OnDestroy {
+
   //dataTable configuraciones
   @ViewChild(DataTableDirective, { static: false })
   dtElement!: DataTableDirective;
   dtOptions: DataTables.Settings = {};
-  // variable que guarda los datos
-  roles: any;
-  dtTrigger: Subject<any> = new Subject<any>();
-
-  //definicion NgModel
-  role: Roles | any = {
-    token: '',
-    id_roles: 0,
-    name_role: '',
-    description_role: '',
-    role_status: 0,
-    created_att: new Date(),
-    updated_att: new Date()
-  }
 
   //modal actualizar
   edit: boolean = false;
+
+  // variable que guarda los datos
+  vehicleTypes: any;
+  dtTrigger: Subject<any> = new Subject<any>();
   //open modal
   submitted: boolean = false;
+  //definicion NgModel
+  vehicleType:VehicleTypes | any ={
+    token : '',
+    id_vehicle_type : 0,
+    vehicle_name : '',
+    status_vehicle : 0,
+    created_att : new Date(),
+    updated_att : new Date()
+  }
 
-  constructor(private rolesService: RolesService, private recaptchaV3Service: ReCaptchaV3Service, config: NgbModalConfig, private modalService: NgbModal) {
+  constructor(private vehicleTypeServices : VehicleTypesService, private recaptchaV3Service: ReCaptchaV3Service, config: NgbModalConfig, private modalService: NgbModal) { 
     config.backdrop = 'static';
     config.keyboard = false;
   }
-
   open(content: any) {
     this.modalService.open(content);
   }
 
   close() {
     document.getElementById('closeModal')?.click();
-    this.role = {
-      token: '',
-      id_roles: 0,
-      name_role: '',
-      description_role: '',
-      role_status: 0,
-      created_att: new Date(),
-      updated_att: new Date()
+      this.vehicleType = {
+      token : '',
+      id_vehicle_type : 0,
+      vehicle_name : '',
+      status_vehicle : 0,
+      created_att : new Date(),
+      updated_att : new Date()
     }
   }
 
   ngOnInit(): void {
     this.dtOptions = {
-      responsive: true,
       processing: true,
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -70,22 +68,21 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       },
       destroy: true,
       autoWidth: true,
-      order: [1, 'asc']
+      order: [0, 'asc']
     };
   }
-
-  ngAfterViewInit(): void {
+  
+  ngAfterViewInit(): void{
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
-        this.getRoles(token)
+        this.getvehicleTypes(token)
       },
       (error: any) => {
         console.log(error)
       }
     )
   }
-
-  ngOnDestroy(): void {
+  ngOnDestroy():void{
     this.dtTrigger.unsubscribe();
   }
 
@@ -93,7 +90,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       this.recaptchaV3Service.execute('action').subscribe(
         (token) => {
-          this.getRoles(token);
+          this.getvehicleTypes(token);
         },
         (err) => {
           console.log(err);
@@ -103,93 +100,88 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
     })
   }
 
-  getRoles(token: any) {
-    this.rolesService.getRoles(token).subscribe(
-      (res: any) => {
-        this.roles = res;
+  getvehicleTypes(token : any){
+    this.vehicleTypeServices.getVehicleTypes(token).subscribe(
+      (res: any)=>{
+        this.vehicleTypes = res;
         this.dtTrigger.next();
       },
-      (error: any) => {
+      (error: any)=>{
         console.log(error)
       }
+
     )
   }
-
-  getRole(id_role: string) {
-    this.recaptchaV3Service.execute('action').subscribe(
-      (token) => {
-        this.rolesService.getRole(token, id_role).subscribe(
-          (res: any) => {
-            this.role = res;
-            this.edit = true;
-          },
-          (error: any) => {
-            console.log(error);
-          }
-        )
-      },
-      (error: any) => {
-        console.log(error)
-      }
-    )
+  getOnevehicleType(id:string){
+  this.recaptchaV3Service.execute('action').subscribe(
+    (token)=>{
+      this.vehicleTypeServices.getVehicleType(token,id).subscribe(
+        (res:any)=>{
+          this.vehicleType = res;
+          this.edit = true;
+        },
+        (error:any)=>{
+          console.log(error)
+          
+        }
+      )
+    }
+  )
   }
 
-  saveRole() {
+  savevehicleType(){
     this.recaptchaV3Service.execute('action').subscribe(
-      (token) => {
-        this.role.token = token;
-        if (this.role.name_role == '') {
+      (token)=>{
+        this.vehicleType.token = token;
+        if (this.vehicleType.vehicle_name == ''|| this.vehicleType.status_vehicle == 0) {
           Swal.fire('Atención', 'Todos los campos son obligarios', 'error')
         } else {
-          delete this.role.id_roles;
-          delete this.role.updated_att;
-          this.rolesService.saveRole(this.role).subscribe(
+          delete this.vehicleType.id_vehicle_type;
+          delete this.vehicleType.updated_att;
+          this.vehicleTypeServices.saveVehicleType(this.vehicleType).subscribe(
             (res: any) => {
               if (res['status']) {
-                Swal.fire('¡Role!', res['message'], 'success');
+                Swal.fire('¡Tipo de Vehiculo!', res['message'], 'success');
                 this.rerender();
                 this.close();
               }
             },
             (error: any) => {
               if (error['status'] == 404) {
-                Swal.fire('¡Error!', error['error']['message'], 'error');
+                Swal.fire('¡Error!', error['message'], 'error');
               }
             }
           )
+
         }
-      },
-      (error: any) => {
-        console.log(error);
       }
     )
   }
-
-  updateRole() {
+  updatevehicleType(){
     this.recaptchaV3Service.execute('action').subscribe(
-      (token) => {
-        this.role.token = token;
-        delete this.role.created_att;
-        this.rolesService.updateRole(this.role.id_roles, this.role).subscribe(
+      (token)=>{
+        this.vehicleType.token = token;
+        delete this.vehicleType.created_att;
+        this.vehicleTypeServices.updateVehicleType(this.vehicleType.id_vehicle_type,this.vehicleType).subscribe(
           (res: any) => {
-            Swal.fire('¡Role!', res['message'], 'success');
-            this.rerender();
-            this.close();
+            if (res['status']) {
+              Swal.fire('¡Tipo de Vehiculo!', res['message'], 'success');
+              this.rerender();
+              this.close();
+            }
           },
           (error: any) => {
             if (error['status'] == 404) {
-              Swal.fire('¡Error!', error['error']['message'], 'error');
+              Swal.fire('¡Error!', error['message'], 'error');
             }
           }
         )
-      },
-      (error: any) => {
-        console.log(error)
+
       }
     )
   }
 
-  deleteRole(id_role: string) {
+  deletevehicleType(id : string){
     Swal.fire({
       title: 'Estas Seguro',
       text: '¡No podras revertir esto!',
@@ -202,7 +194,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       if (result.value) {
         this.recaptchaV3Service.execute('action').subscribe(
           (token) => {
-            this.rolesService.deleteRole(token, id_role).subscribe(
+            this.vehicleTypeServices.deleteVehicleType(token, id).subscribe(
               (res: any) => {
                 if (res['status']) {
                   Swal.fire('Eliminado', res['message'], 'success');
@@ -212,7 +204,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
               },
               (error: any) => {
                 if (error['status'] == 404) {
-                  Swal.fire('¡Error!', error['error']['message'], 'error');
+                  Swal.fire('¡Error!', error['message'], 'error');
                 }
               }
             )
@@ -224,5 +216,4 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       }
     })
   }
-
 }

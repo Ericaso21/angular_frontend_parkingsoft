@@ -3,33 +3,39 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subject } from 'rxjs';
-import { Roles } from 'src/app/interfaces/roles';
-import { RolesService } from 'src/app/services/roles.service';
+import { Rates } from 'src/app/interfaces/rates';
+import { RatesService } from 'src/app/services/rates.service';
 import Swal from 'sweetalert2';
+
 @Component({
-  selector: 'app-roles',
-  templateUrl: './roles.component.html',
+  selector: 'app-rates',
+  templateUrl: './rates.component.html',
   styles: [
   ]
 })
-export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
+export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
   //dataTable configuraciones
   @ViewChild(DataTableDirective, { static: false })
   dtElement!: DataTableDirective;
   dtOptions: DataTables.Settings = {};
-  // variable que guarda los datos
-  roles: any;
+
+  rates: any;
+  vehicleType: any;
   dtTrigger: Subject<any> = new Subject<any>();
 
   //definicion NgModel
-  role: Roles | any = {
+  rate:Rates | any = {
+  
     token: '',
-    id_roles: 0,
-    name_role: '',
-    description_role: '',
-    role_status: 0,
+    id_rate: 0,
+    fk_id_vehicle_type: 0,
+    minute_rate: '',
+    hourly_rate: '',
+    day_rate: '',
+    rate_status: 0,
     created_att: new Date(),
     updated_att: new Date()
+
   }
 
   //modal actualizar
@@ -37,31 +43,41 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
   //open modal
   submitted: boolean = false;
 
-  constructor(private rolesService: RolesService, private recaptchaV3Service: ReCaptchaV3Service, config: NgbModalConfig, private modalService: NgbModal) {
-    config.backdrop = 'static';
-    config.keyboard = false;
-  }
 
+  constructor(private ratesServices: RatesService,  private recaptchaV3Service: ReCaptchaV3Service, config: NgbModalConfig, private modalService: NgbModal)
+  {     
+  config.backdrop = 'static';
+  config.keyboard = false;
+  }
+  
   open(content: any) {
     this.modalService.open(content);
   }
 
+
   close() {
     document.getElementById('closeModal')?.click();
-    this.role = {
-      token: '',
-      id_roles: 0,
-      name_role: '',
-      description_role: '',
-      role_status: 0,
-      created_att: new Date(),
-      updated_att: new Date()
-    }
   }
 
+  getVehicleType(){
+    this.recaptchaV3Service.execute('action').subscribe(
+      (token)=>{
+        this.ratesServices.getVehicleType(token).subscribe(
+          (res:any)=>{
+            this.vehicleType=res
+          }
+          ,(error:any)=>{
+            console.log(error)
+          }
+        )
+      }
+    )
+  }
+  
+
   ngOnInit(): void {
+    this.getVehicleType()
     this.dtOptions = {
-      responsive: true,
       processing: true,
       pagingType: 'full_numbers',
       pageLength: 10,
@@ -70,14 +86,14 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       },
       destroy: true,
       autoWidth: true,
-      order: [1, 'asc']
+      order: [0, 'asc']
     };
   }
 
   ngAfterViewInit(): void {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
-        this.getRoles(token)
+        this.getRates(token)
       },
       (error: any) => {
         console.log(error)
@@ -93,7 +109,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       this.recaptchaV3Service.execute('action').subscribe(
         (token) => {
-          this.getRoles(token);
+          this.getRates(token);
         },
         (err) => {
           console.log(err);
@@ -103,10 +119,11 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
     })
   }
 
-  getRoles(token: any) {
-    this.rolesService.getRoles(token).subscribe(
+  getRates(token: any) {
+    this.ratesServices.getRates(token).subscribe(
       (res: any) => {
-        this.roles = res;
+        this.rates = res;
+        console.log(this.rates);
         this.dtTrigger.next();
       },
       (error: any) => {
@@ -115,12 +132,12 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
     )
   }
 
-  getRole(id_role: string) {
+  getRate(id: string) {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
-        this.rolesService.getRole(token, id_role).subscribe(
+        this.ratesServices.getRate(token, id).subscribe(
           (res: any) => {
-            this.role = res;
+            this.rate = res;
             this.edit = true;
           },
           (error: any) => {
@@ -134,19 +151,19 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
     )
   }
 
-  saveRole() {
+  saveRate() {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
-        this.role.token = token;
-        if (this.role.name_role == '') {
+        this.rate.token = token;
+        if (this.rate.minute_rate == '' || this.rate.hourly_rate == '' || this.rate.day_rate == '' || this.rate.rate_status == 0 || this.rate.fk_id_vehicle_type == 0) {
           Swal.fire('Atención', 'Todos los campos son obligarios', 'error')
         } else {
-          delete this.role.id_roles;
-          delete this.role.updated_att;
-          this.rolesService.saveRole(this.role).subscribe(
+          delete this.rate.id_rate;
+          delete this.rate.updated_att;
+          this.ratesServices.saveRates(this.rate).subscribe(
             (res: any) => {
               if (res['status']) {
-                Swal.fire('¡Role!', res['message'], 'success');
+                Swal.fire('¡Tarifa!', res['message'], 'success');
                 this.rerender();
                 this.close();
               }
@@ -160,19 +177,19 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
         }
       },
       (error: any) => {
-        console.log(error);
+
       }
     )
   }
 
-  updateRole() {
+  updateRate() {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
-        this.role.token = token;
-        delete this.role.created_att;
-        this.rolesService.updateRole(this.role.id_roles, this.role).subscribe(
+        this.rate.token = token;
+        delete this.rate.created_att;
+        this.ratesServices.updateRate(this.rate.id_rate, this.rate).subscribe(
           (res: any) => {
-            Swal.fire('¡Role!', res['message'], 'success');
+            Swal.fire('Tarifa!', res['message'], 'success');
             this.rerender();
             this.close();
           },
@@ -189,7 +206,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
     )
   }
 
-  deleteRole(id_role: string) {
+  deleteRate(id_rate: string) {
     Swal.fire({
       title: 'Estas Seguro',
       text: '¡No podras revertir esto!',
@@ -202,7 +219,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       if (result.value) {
         this.recaptchaV3Service.execute('action').subscribe(
           (token) => {
-            this.rolesService.deleteRole(token, id_role).subscribe(
+            this.ratesServices.deleteRate(token, id_rate).subscribe(
               (res: any) => {
                 if (res['status']) {
                   Swal.fire('Eliminado', res['message'], 'success');
@@ -212,7 +229,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
               },
               (error: any) => {
                 if (error['status'] == 404) {
-                  Swal.fire('¡Error!', error['error']['message'], 'error');
+                  Swal.fire('¡Error!', error['message'], 'error');
                 }
               }
             )
