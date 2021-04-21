@@ -1,0 +1,149 @@
+<!-- modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Acceso de permisos</h4>
+        <button type="button" id="closeModal" class="close" aria-label="Close"
+            (click)="submitted = false; d('Cross click');close(); edit = false">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form autocomplete="off">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="fk_id_roles">Rol</label>
+                    <select name="fk_id_roles" class="form-control" [(ngModel)]="accessPermit.fk_id_roles">
+                        <option value="0">Seleccione</option>
+                        <option *ngFor="let role of roles" [value]="role.id_roles">{{role.name_role}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="fk_id_modules">Modulo</label>
+                    <select name="fk_id_modules" class="form-control" [(ngModel)]="accessPermit.fk_id_modules">
+                        <option value="0">Seleccione</option>
+                        <option *ngFor="let module of modules" [value]="module.id_modules">{{module.name_modules}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label class="control-label" for="view_modules">Ver</label>
+                    <div class="toggle-flip">
+                        <label class="custom-toggle">
+                            <input type="checkbox" name="view_modules" [(ngModel)]="accessPermit.view_modules">
+                            <span class="custom-toggle-slider rounded-circle"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label" for="create_modules">Crear</label>
+                    <div class="toggle-flip">
+                        <label class="custom-toggle">
+                            <input type="checkbox" name="create_modules" [(ngModel)]="accessPermit.create_modules">
+                            <span class="custom-toggle-slider rounded-circle"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label" for="edit_modules">Editar</label>
+                    <div class="toggle-flip">
+                        <label class="custom-toggle">
+                            <input type="checkbox" name="edit_modules" [(ngModel)]="accessPermit.edit_modules">
+                            <span class="custom-toggle-slider rounded-circle"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="control-label" for="delete_modules">Eliminar</label>
+                    <div class="toggle-flip">
+                        <label class="custom-toggle">
+                            <input type="checkbox" name="delete_modules" [(ngModel)]="accessPermit.delete_modules">
+                            <span class="custom-toggle-slider rounded-circle"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark"
+            (click)="submitted = false; c('Save click'); close(); edit = false">
+            Cerrar
+        </button>
+        <button class="btn btn-success" (click)="edit ? updateAccessPermit() : saveAccessPermit()">
+            Guardar
+        </button>
+    </div>
+</ng-template>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Acceso de permisos</h3>
+                    <button class="btn btn-success btn-sm" (click)="open(content)">
+                        <i class="ni ni-fat-add">Crear permiso</i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                            class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Acciones</th>
+                                    <th scope="col">Nombre modulo</th>
+                                    <th scope="col">Rol</th>
+                                    <th scope="col">Ver</th>
+                                    <th scope="col">Crear</th>
+                                    <th scope="col">Editar</th>
+                                    <th scope="col">Eliminar</th>
+                                    <th scope="col">Fecha creacion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let accessPermit of accessPermits">
+                                    <td>
+                                        <div class="btn-group btn-group-sm text-center">
+                                            <button class="btn btn-primary btn-sm" title="Editar"
+                                                (click)="getAccessPermit(accessPermit.id_access_permits); open(content)">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm" title="Eliminar"
+                                                (click)="deleteAccessPermit(accessPermit.id_access_permits)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td>{{ accessPermit.name_modules }}</td>
+                                    <td>{{ accessPermit.name_role }}</td>
+                                    <td *ngIf="accessPermit.view_modules == 1; else opposite_case">
+                                        <i class="ni ni-check-bold"><span class="badge badge-success"></span></i>
+                                    </td>
+                                    <td *ngIf="accessPermit.create_modules == 1; else opposite_case">
+                                        <i class="ni ni-check-bold"><span class="badge badge-success"></span></i>
+                                    </td>
+                                    <td *ngIf="accessPermit.edit_modules == 1; else opposite_case">
+                                        <i class="ni ni-check-bold"><span class="badge badge-success"></span></i>
+                                    </td>
+                                    <td *ngIf="accessPermit.delete_modules == 1; else opposite_case">
+                                        <i class="ni ni-check-bold"><span class="badge badge-success"></span></i>
+                                    </td>
+                                    <ng-template #opposite_case>
+                                        <td>
+                                            <i class="ni ni-fat-remove"><span class="badge badge-danger"></span></i>
+                                        </td>
+                                    </ng-template>
+                                    <td>{{ accessPermit.created_att }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
