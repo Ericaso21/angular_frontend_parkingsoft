@@ -13,6 +13,7 @@ import { BlockTypesComponent } from 'src/app/pages/block-types/block-types.compo
 import { RatesComponent } from 'src/app/pages/rates/rates.component';
 import { VehicleTypesComponent } from 'src/app/pages/vehicle-types/vehicle-types.component';
 import { UserComponent } from 'src/app/pages/user/user.component';
+import { AcessPermitComponent } from 'src/app/pages/acess-permit/acess-permit.component';
 
 
 @NgModule({
@@ -22,9 +23,10 @@ import { UserComponent } from 'src/app/pages/user/user.component';
     BlockTypesComponent,
     RatesComponent,
     VehicleTypesComponent,
-    UserComponent
+    UserComponent,
+    AcessPermitComponent
   ],
-  
+
   imports: [
     CommonModule,
     RouterModule.forChild(TemplateRoutingModule),
