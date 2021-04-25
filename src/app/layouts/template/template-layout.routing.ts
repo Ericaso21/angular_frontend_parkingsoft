@@ -6,6 +6,7 @@ import { RolesComponent } from 'src/app/pages/roles/roles.component';
 import { VehicleTypesComponent } from 'src/app/pages/vehicle-types/vehicle-types.component';
 import { UserComponent } from 'src/app/pages/user/user.component';
 import { AcessPermitComponent } from 'src/app/pages/acess-permit/acess-permit.component';
+import { TicketComponent } from 'src/app/pages/ticket/ticket.component';
 
 export const TemplateRoutingModule: Routes = [
     { path: 'dashboard', component: DashboardComponent },
@@ -14,5 +15,6 @@ export const TemplateRoutingModule: Routes = [
     { path: 'rates', component: RatesComponent },
     { path: 'vehicleTypes', component: VehicleTypesComponent },
     { path: 'user', component: UserComponent },
-    { path: 'accessPermit', component: AcessPermitComponent }
+    { path: 'accessPermit', component: AcessPermitComponent },
+    { path: 'ticket', component: TicketComponent }
 ]
