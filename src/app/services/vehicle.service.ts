@@ -31,11 +31,11 @@ export class VehicleService {
   }
 
   saveVehicle(vehicle : Vehicle){
-    return this.http.post(`${this.API_URI}/vehicle/create`, vehicle)
+    return this.http.post(`${this.API_URI}/vehicles/create`, vehicle)
   }
 
   updateVehicle(id: String | number, vehicle:Vehicle){
-    return this.http.put(`${this.API_URI}/vehicles/getOne/${id}`, vehicle)
+    return this.http.put(`${this.API_URI}/vehicles/update/${id}`, vehicle)
   }
 
   deleteVehicle(token: any ,id:String){

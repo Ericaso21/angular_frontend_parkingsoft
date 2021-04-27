@@ -161,15 +161,14 @@ export class VehicleComponent implements AfterViewInit,OnDestroy,OnInit {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
         this.vehicle.token = token;
-        if (this.vehicle.minute_rate == '' || this.vehicle.hourly_rate == '' || this.vehicle.day_rate == '') {
+        if (this.vehicle.vehicle_plate == '' || this.vehicle.fk_document_number == '') {
           Swal.fire('Atención', 'Todos los campos son obligarios', 'error')
         } else {
-          delete this.vehicle.id_rate;
           delete this.vehicle.updated_att;
           this.vehicleServices.saveVehicle(this.vehicle).subscribe(
             (res: any) => {
               if (res['status']) {
-                Swal.fire('¡Tarifa!', res['message'], 'success');
+                Swal.fire('¡Vehiculo!', res['message'], 'success');
                 this.rerender();
                 this.close();
               }

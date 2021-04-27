@@ -91,11 +91,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let Vehicle of vehicle; let indice = index">
+                  <tr *ngFor="let vehicle of vehicles; let indice = index">
                     <td>{{ indice + 1 }}</td>
+                    <td>{{ vehicle.fk_document_number  }}</td>
                     <td>{{ vehicle.vehicle_plate  }}</td>
                     <td>{{ vehicle.model_number }}</td>
-                    <td *ngIf="vehicle.rate_status == 1; else opposite_case">
+                    <td>{{ vehicle.vehicle_name }}</td>
+                    <td *ngIf="vehicle.vehicle_status == 1; else opposite_case">
                       <span class="badge badge-success">Activo</span>
                     </td>
                     <ng-template #opposite_case>
