@@ -14,6 +14,7 @@ import { RatesComponent } from 'src/app/pages/rates/rates.component';
 import { VehicleTypesComponent } from 'src/app/pages/vehicle-types/vehicle-types.component';
 import { UserComponent } from 'src/app/pages/user/user.component';
 import { AcessPermitComponent } from 'src/app/pages/acess-permit/acess-permit.component';
+import { VehicleComponent } from 'src/app/pages/vehicle/vehicle.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { AcessPermitComponent } from 'src/app/pages/acess-permit/acess-permit.co
     RatesComponent,
     VehicleTypesComponent,
     UserComponent,
-    AcessPermitComponent
+    AcessPermitComponent,
+    VehicleComponent,
   ],
 
   imports: [

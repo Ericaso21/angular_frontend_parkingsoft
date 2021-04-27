@@ -15,7 +15,8 @@ export const ROUTES: RouteInfo[] = [
   { path: '/rates', title: 'Tarifas', icon: 'ni ni-money-coins text-primary', class: '' },
   { path: '/vehicleTypes', title: 'Tipos de Vehiculos', icon: 'ni ni-ambulance text-primary', class: '' },
   { path: '/user', title: 'Usuarios', icon: 'ni-single-02 text-primary', class: '' },
-  { path: '/accessPermit', title: 'Permisos', icon: 'ni ni-lock-circle-open text-primary', class: '' }
+  { path: '/accessPermit', title: 'Permisos', icon: 'ni ni-lock-circle-open text-primary', class: '' },
+  { path: '/vehicle', title: 'Vehiculos', icon: 'ni ni-delivery-fast text-primary', class: ''},
 ]
 
 
