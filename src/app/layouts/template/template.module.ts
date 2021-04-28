@@ -16,6 +16,7 @@ import { UserComponent } from 'src/app/pages/user/user.component';
 import { AcessPermitComponent } from 'src/app/pages/acess-permit/acess-permit.component';
 import { TicketComponent } from 'src/app/pages/ticket/ticket.component';
 import { BillComponent } from 'src/app/pages/bill/bill.component';
+import { VehicleComponent } from 'src/app/pages/vehicle/vehicle.component';
 
 
 
