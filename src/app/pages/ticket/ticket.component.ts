@@ -6,8 +6,8 @@ import { Subject } from 'rxjs';
 import { Ticket } from 'src/app/interfaces/ticket';
 import { TicketService } from 'src/app/services/ticket.service';
 import Swal from 'sweetalert2';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import domtoimage from 'dom-to-image';
 import { formatDate } from '@angular/common';
 import { BillsService } from 'src/app/services/bills.service';
 import { Bill } from 'src/app/interfaces/bill';
@@ -238,26 +238,15 @@ export class TicketComponent implements AfterViewInit, OnDestroy, OnInit {
 
   downloadPDF() {
     // Extraemos el
-    const DATA = document.getElementById('htmlData') as HTMLInputElement;
-    const doc = new jsPDF('p', 'pt', 'a4');
-    const options = {
-      background: 'white',
-      scale: 3
-    };
-    html2canvas(DATA, options).then((canvas) => {
-
-      const img = canvas.toDataURL('image/PNG');
-
-      // Add image Canvas to PDF
-      const bufferX = 150;
-      const bufferY = 1;
-      const imgProps = (doc as any).getImageProperties(img);
-      const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      doc.addImage(img, 'PNG', bufferX, bufferY, pdfWidth, pdfHeight, undefined, 'FAST');
-      return doc;
-    }).then((docResult) => {
-      docResult.save(`${new Date().toISOString()}_tutorial.pdf`);
+    const DATA = window.document.getElementById('htmlData') as HTMLInputElement;
+    domtoimage.toPng(DATA).then((dataUrl) => {
+      let imagen = new Image();
+      imagen.src = dataUrl;
+      const bufferX = 180;
+      const bufferY = 10;
+      let pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.addImage(imagen, bufferX, bufferY, 280, 170);
+      pdf.save(`${new Date().toISOString()}_tutorial.pdf`)
     });
   }
 

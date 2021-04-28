@@ -15,7 +15,17 @@ export class BillsService {
     return this.http.get(`${this.API_URI}/bill/ticket/${id}`, { 'headers': headers });
   }
 
+  getBill(token: any) {
+    let headers = new HttpHeaders({ 'x-token': token });
+    return this.http.get(`${this.API_URI}/bill/list`, { 'headers': headers });
+  }
+
   saveBill(bill: Bill) {
     return this.http.post(`${this.API_URI}/bill/create`, bill)
+  }
+
+  deleteBill(token: any, id: string) {
+    let headers = new HttpHeaders({ 'x-token': token });
+    return this.http.delete(`${this.API_URI}/bill/delete/${id}`, { 'headers': headers });
   }
 }

@@ -1,0 +1,83 @@
+<!-- modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Factura</h4>
+        <button type="button" id="closeModal" class="close" aria-label="Close"
+            (click)="submitted = false; d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="submitted = false; c('Save click')">
+            Cerrar
+        </button>
+        <button class="btn btn-success">
+            Guardar
+        </button>
+    </div>
+</ng-template>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Factura</h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                            class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Acciones</th>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Hora entrada</th>
+                                    <th scope="col">Hora salida</th>
+                                    <th scope="col">Total tiempo</th>
+                                    <th scope="col">Bloque</th>
+                                    <th scope="col">Vehiculo</th>
+                                    <th scope="col">Documento</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Subtotal</th>
+                                    <th scope="col">Iva</th>
+                                    <th scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let bill of bills">
+                                    <td>
+                                        <div class="btn-group btn-group-sm text-center">
+                                            <button class="btn btn-primary btn-sm" title="Editar">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm" title="Eliminar">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td>{{bill.id_bill}}</td>
+                                    <td>{{bill.date_bill}}</td>
+                                    <td>{{bill.entry_time}}</td>
+                                    <td>{{bill.departure_time}}</td>
+                                    <td>{{bill.total_time}}</td>
+                                    <td>{{bill.pk_fk_id_block}}</td>
+                                    <td>{{bill.fk_id_vehicle}}</td>
+                                    <td>{{bill.fk_document_number}}</td>
+                                    <td>{{bill.first_name}} {{bill.surname}}</td>
+                                    <td>{{bill.subtotal_value}}</td>
+                                    <td>{{bill.iva_value}}</td>
+                                    <td>{{bill.total_value}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
