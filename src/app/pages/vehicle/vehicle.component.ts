@@ -27,9 +27,9 @@ export class VehicleComponent implements AfterViewInit,OnDestroy,OnInit {
   vehicle:Vehicle | any= {
     token: '',
     vehicle_plate:'',
-    fk_document_number:'', 
+    fk_document_number: 0, 
     fk_id_vehicle_type: 0,
-    model_number:'',
+    model_number: '',
     vehicle_status: 0,
     created_att: new Date,
     updated_att: new Date,
@@ -53,6 +53,16 @@ export class VehicleComponent implements AfterViewInit,OnDestroy,OnInit {
   
   close() {
     document.getElementById('closeModal')?.click();
+    this.vehicle ={
+      token: '',
+      vehicle_plate:'',
+      fk_document_number:'', 
+      fk_id_vehicle_type: 0,
+      model_number:'',
+      vehicle_status: 0,
+      created_att: new Date,
+      updated_att: new Date,
+    }
   }
 
 
