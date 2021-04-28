@@ -15,6 +15,8 @@ import { VehicleTypesComponent } from 'src/app/pages/vehicle-types/vehicle-types
 import { UserComponent } from 'src/app/pages/user/user.component';
 import { AcessPermitComponent } from 'src/app/pages/acess-permit/acess-permit.component';
 import { TicketComponent } from 'src/app/pages/ticket/ticket.component';
+import { BillComponent } from 'src/app/pages/bill/bill.component';
+
 
 
 @NgModule({
@@ -26,6 +28,7 @@ import { TicketComponent } from 'src/app/pages/ticket/ticket.component';
     VehicleTypesComponent,
     UserComponent,
     AcessPermitComponent,
+    BillComponent,
     VehicleComponent,
     TicketComponent
   ],
