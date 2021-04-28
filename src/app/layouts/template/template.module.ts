@@ -28,8 +28,9 @@ import { BillComponent } from 'src/app/pages/bill/bill.component';
     VehicleTypesComponent,
     UserComponent,
     AcessPermitComponent,
-    TicketComponent,
-    BillComponent
+    BillComponent,
+    VehicleComponent,
+    TicketComponent
   ],
 
   imports: [

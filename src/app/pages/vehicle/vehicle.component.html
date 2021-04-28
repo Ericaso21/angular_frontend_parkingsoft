@@ -1,0 +1,127 @@
+<!-- modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Vehiculos</h4>
+    <button type="button" id="closeModal" class="close" aria-label="Close"
+      (click)="submitted = false; d('Cross click');close(); edit = false">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label class="control-label">Placa Vehiculo</label>
+          <input class="form-control" type="text" name="vehicle_plate" [(ngModel)]="vehicle.vehicle_plate"
+            placeholder="Placa Vehiculo" autofocus>
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">Numero Modelo</label>
+          <input class="form-control" type="text" name="model_number" [(ngModel)]="vehicle.model_number"
+            placeholder="Numero Modelo">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label class="control-label">Tipo Vehiculo</label>
+          <select class="form-control" name="fk_id_vehicle_type " [(ngModel)]="vehicle.fk_id_vehicle_type">
+            <option value="0">Seleccione</option>
+            <option *ngFor="let vehicle_type of vehicle_types" [value]="vehicle_type.id_vehicle_type">
+              {{vehicle_type.vehicle_name}}</option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">Estado</label>
+          <select class="form-control" name="vehicle_status" [(ngModel)]="vehicle.vehicle_status">
+            <option value="0">Seleccione</option>
+            <option value="1">Activo</option>
+            <option value="2">Inactivo</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label class="control-label">Documento</label>
+          <select class="form-control" name="fk_id_vehicle_type " [(ngModel)]="vehicle.fk_document_number">
+            <option value="0">Seleccione</option>
+            <option *ngFor="let document of documents" [value]="document.document_number">
+              {{document.document_number}}  {{document.first_name}} {{document.surname}}</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click'); close(); edit = false">
+      Cerrar
+    </button>
+    <button class="btn btn-success" (click)="edit ? updateVehicle() : saveVehicle()">
+      Guardar
+    </button>
+  </div>
+</ng-template>
+  
+  
+  <!-- Page content -->
+  <div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Vehiculos</h3>
+            <button class="btn btn-success btn-sm" (click)="open(content)">
+              <i class="ni ni-fat-add">Crear Vehiculo</i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                class="table align-items-center table-flush">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Placa Vehiculo</th>
+                    <th scope="col">Numero Modelo</th>
+                    <th scope="col">Tipo Vehiculo</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let vehicle of vehicles; let indice = index">
+                    <td>{{ indice + 1 }}</td>
+                    <td>{{ vehicle.fk_document_number  }}</td>
+                    <td>{{ vehicle.vehicle_plate  }}</td>
+                    <td>{{ vehicle.model_number }}</td>
+                    <td>{{ vehicle.vehicle_name }}</td>
+                    <td *ngIf="vehicle.vehicle_status == 1; else opposite_case">
+                      <span class="badge badge-success">Activo</span>
+                    </td>
+                    <ng-template #opposite_case>
+                      <td>
+                        <span class="badge badge-danger">Cerrado</span>
+                      </td>
+                    </ng-template>
+                    <td>
+                      <div class="btn-group btn-group-sm text-center">
+                        <button class="btn btn-primary btn-sm" title="Editar"
+                          (click)="getVehicle(vehicle.vehicle_plate); open(content)">
+                          <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" title="Eliminar" (click)="deleteVehicle(vehicle.vehicle_plate)">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
