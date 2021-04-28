@@ -17,6 +17,7 @@ export const ROUTES: RouteInfo[] = [
   { path: '/user', title: 'Usuarios', icon: 'ni-single-02 text-primary', class: '' },
   { path: '/accessPermit', title: 'Permisos', icon: 'ni ni-lock-circle-open text-primary', class: '' },
   { path: '/vehicle', title: 'Vehiculos', icon: 'ni ni-delivery-fast text-primary', class: ''},
+  { path: '/ticket', title: 'Ticket', icon: 'ni ni-tag text-primary', class: '' }
 ]
 
 
