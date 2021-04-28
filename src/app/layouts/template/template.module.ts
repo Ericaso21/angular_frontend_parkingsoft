@@ -26,6 +26,7 @@ import { TicketComponent } from 'src/app/pages/ticket/ticket.component';
     VehicleTypesComponent,
     UserComponent,
     AcessPermitComponent,
+    VehicleComponent,
     TicketComponent
   ],
 
