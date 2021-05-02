@@ -23,6 +23,7 @@
             "allowedCommonJsDependencies": [
               "crypto-js",
               "raf",
+              "chart.js",
               "@babel/runtime-corejs3/core-js-stable/parse-float",
               "@babel/runtime-corejs3/core-js-stable/promise",
               "@babel/runtime-corejs3/core-js-stable/symbol",
