@@ -222,9 +222,17 @@ export class UserComponent implements AfterViewInit, OnDestroy, OnInit {
           Swal.fire('Atención', 'Todos los campos son obligarios', 'error')
         } else {
           delete this.user.updated_att;
-          this.user.second_name = this.user.first_name.split(' ')[1];
+          if (this.user.first_name.split(' ')[1] == undefined) {
+            delete this.user.second_name;
+          } else {
+            this.user.second_name = this.user.first_name.split(' ')[1];
+          }
+          if (this.user.surname.split(' ')[1] == undefined) {
+            delete this.user.second_surname;
+          } else {
+            this.user.second_surname = this.user.surname.split(' ')[1];
+          }
           this.user.first_name = this.user.first_name.split(' ')[0];
-          this.user.second_surname = this.user.surname.split(' ')[1];
           this.user.surname = this.user.surname.split(' ')[0];
           this.user.password_user = this.encript.set('123456$#@$^@1ERF', this.user.password_user);
           this.userService.saveUser(this.user).subscribe(

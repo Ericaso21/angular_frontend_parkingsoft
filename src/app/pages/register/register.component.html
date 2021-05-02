@@ -1,0 +1,90 @@
+<div class="header bg-gradient-blue py-7 py-lg-8">
+    <div class="container">
+        <div class="header-body text-center mb-7">
+            <div class="row justify-content-center">
+                <div class="col-lg-5 col-md-6">
+                    <h1 class="text-default">Bienvenido!</h1>
+                    <p class="text-lead text-default">Este sitio está protegido por reCAPTCHA y aplica las <a
+                            href="https://policies.google.com/privacy?xd_co_f=OTc5Yzc0NjktYjU3OS00YzhlLWFhMTgtNGViNTEyYjgzN2Nl"
+                            class="link-primary">politicas de privacidad</a> y los terminos <a
+                            href="https://policies.google.com/terms" class="link-primary">términos de servicio de
+                            Google</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page content -->
+<div class="container mt--8 pb-5">
+    <!-- Table -->
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card bg-secondary shadow border-0">
+                <div class="card-body px-lg-5 py-lg-5">
+                    <div class="text-center text-muted mb-4">
+                        <small>Registrar</small>
+                    </div>
+                    <form autocomplete="off">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Nombres</label>
+                                <input type="text" name="first_name" placeholder="Nombres" class="form-control"
+                                    [(ngModel)]="client.first_name">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Apellidos</label>
+                                <input type="text" name="surname" placeholder="Apellidos" class="form-control"
+                                    [(ngModel)]="client.surname">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Documento</label>
+                                <input class="form-control" type="text" name="user.document_number"
+                                    [(ngModel)]="client.document_number" placeholder="Documento">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Tipo de documento</label>
+                                <select name="pk_fk_id_document_type" class="form-control"
+                                    [(ngModel)]="client.pk_fk_id_document_type">
+                                    <option value="0">Seleccione...</option>
+                                    <option *ngFor="let document_types of document_type"
+                                        [value]="document_types.id_document_type">{{document_types.document_type_name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Nombre Usuario</label>
+                                <input class="form-control" type="text" name="name_user" [(ngModel)]="client.name_user"
+                                    placeholder="Nombre usuario">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Genero</label>
+                                <select name="fk_id_gender" class="form-control" [(ngModel)]="client.fk_id_gender">
+                                    <option value="0">Seleccione...</option>
+                                    <option *ngFor="let gender of genders" [value]="gender.id_gender">
+                                        {{gender.gender_acronym}}-{{gender.name_gender}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Email</label>
+                                <input class="form-control" type="email" name="email" [(ngModel)]="client.email"
+                                    placeholder="Correo electronico">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Contraseña</label>
+                                <input class="form-control" type="password" name="password_user"
+                                    [(ngModel)]="client.password_user" placeholder="Contraseña" autocomplete="off">
+                            </div>
+                        </div>
+                        <button class="btn btn-success btn-block" (click)="registerUser()">Registarse</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

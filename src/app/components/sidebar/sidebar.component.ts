@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 declare interface RouteInfo {
   path: string,
@@ -11,14 +12,15 @@ declare interface RouteInfo {
 export const ROUTES: RouteInfo[] = [
   { path: '/dashboard', title: 'Dashboard', icon: 'ni-tv-2 text-primary', class: '' },
   { path: '/roles', title: 'Roles', icon: 'ni-single-02 text-primary', class: '' },
-  { path: '/blocktypes', title: 'Tipos de Bloque', icon: 'ni ni-ungroup text-primary', class: '' },
-  { path: '/rates', title: 'Tarifas', icon: 'ni ni-money-coins text-primary', class: '' },
-  { path: '/vehicleTypes', title: 'Tipos de Vehiculos', icon: 'ni ni-ambulance text-primary', class: '' },
   { path: '/user', title: 'Usuarios', icon: 'ni-single-02 text-primary', class: '' },
-  { path: '/accessPermit', title: 'Permisos', icon: 'ni ni-lock-circle-open text-primary', class: '' },
+  { path: '/blocktypes', title: 'Tipos de Bloque', icon: 'ni ni-ungroup text-primary', class: '' },
+  { path: '/blocks', title: 'Bloques', icon: 'ni ni-ungroup text-primary', class: '' },
+  { path: '/vehicleTypes', title: 'Tipos de Vehiculos', icon: 'ni ni-ambulance text-primary', class: '' },
+  { path: '/vehicle', title: 'Vehiculos', icon: 'ni ni-delivery-fast text-primary', class: '' },
+  { path: '/ticket', title: 'Ticket', icon: 'ni ni-tag text-primary', class: '' },
   { path: '/bill', title: 'Facturas', icon: 'ni ni-book-bookmark text-primary', class: '' },
-  { path: '/vehicle', title: 'Vehiculos', icon: 'ni ni-delivery-fast text-primary', class: ''},
-  { path: '/ticket', title: 'Ticket', icon: 'ni ni-tag text-primary', class: '' }
+  { path: '/rates', title: 'Tarifas', icon: 'ni ni-money-coins text-primary', class: '' },
+  { path: '/accessPermit', title: 'Permisos', icon: 'ni ni-lock-circle-open text-primary', class: '' }
 ]
 
 
@@ -34,13 +36,17 @@ export class SidebarComponent implements OnInit {
   public menuItems: any[] = [];
   public isCollapsed = true;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, public authenticationService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;
     })
+  }
+
+  logout() {
+    this.authenticationService.logout();
   }
 
 }

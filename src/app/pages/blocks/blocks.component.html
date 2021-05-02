@@ -1,0 +1,105 @@
+<!-- modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Roles</h4>
+        <button type="button" id="closeModal" class="close" aria-label="Close"
+            (click)="submitted = false; d('Cross click');close(); edit = false">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form autocomplete="off">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="fk_id_block_type">Tipo de bloque</label>
+                    <select name="fk_id_block_type" class="form-control" [(ngModel)]="block.fk_id_block_type">
+                        <option value="0">Seleccione..</option>
+                        <option *ngFor="let blockType of blockTypes" [value]="blockType.id_block_type">
+                            {{blockType.name_block_type}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="block_number">Numero del bloque</label>
+                    <input type="text" name="block_number" class="form-control" placeholder="Numero bloque"
+                        [(ngModel)]="block.block_number">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="block_status">Estado bloque</label>
+                    <select class="form-control" name="block_status" [(ngModel)]="block.block_status">
+                        <option value="0">Seleccione...</option>
+                        <option value="1">Activo</option>
+                        <option value="2">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark"
+            (click)="submitted = false; c('Save click'); close(); edit = false">
+            Cerrar
+        </button>
+        <button class="btn btn-success" (click)="edit ? updateBlock() : saveBlock()">
+            Guardar
+        </button>
+    </div>
+</ng-template>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Roles</h3>
+                    <button class="btn btn-success btn-sm" (click)="open(content)">
+                        <i class="ni ni-fat-add">Crear roles</i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                            class="table align-items-center table-flush">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Acciones</th>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let block of blocks">
+                                    <td>
+                                        <div class="btn-group btn-group-sm text-center">
+                                            <button class="btn btn-primary btn-sm" title="Editar"
+                                                (click)="getBlock(block.id_block); open(content)">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                            <button class="btn btn-danger btn-sm" title="Eliminar"
+                                                (click)="deleteBlock(block.id_block)">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td>{{ block.block_number }}</td>
+                                    <td>{{ block.name_block_type }}</td>
+                                    <td *ngIf="block.block_status == 1; else opposite_case">
+                                        <span class="badge badge-success">Activo</span>
+                                    </td>
+                                    <ng-template #opposite_case>
+                                        <td>
+                                            <span class="badge badge-danger">Cerrado</span>
+                                        </td>
+                                    </ng-template>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

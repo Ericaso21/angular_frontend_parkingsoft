@@ -9,6 +9,7 @@ import { AcessPermitComponent } from 'src/app/pages/acess-permit/acess-permit.co
 import { VehicleComponent } from 'src/app/pages/vehicle/vehicle.component';
 import { TicketComponent } from 'src/app/pages/ticket/ticket.component';
 import { BillComponent } from 'src/app/pages/bill/bill.component';
+import { BlocksComponent } from 'src/app/pages/blocks/blocks.component';
 
 export const TemplateRoutingModule: Routes = [
     { path: 'dashboard', component: DashboardComponent },
@@ -19,6 +20,7 @@ export const TemplateRoutingModule: Routes = [
     { path: 'user', component: UserComponent },
     { path: 'accessPermit', component: AcessPermitComponent },
     { path: 'bill', component: BillComponent },
-    { path: 'vehicle', component: VehicleComponent},
-    { path: 'ticket', component: TicketComponent }
+    { path: 'vehicle', component: VehicleComponent },
+    { path: 'ticket', component: TicketComponent },
+    { path: 'blocks', component: BlocksComponent }
 ]

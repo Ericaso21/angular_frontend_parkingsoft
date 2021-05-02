@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './guards/authentication/auth.guard';
 import { AuthComponent } from './layouts/auth/auth.component';
 import { TemplateComponent } from './layouts/template/template.component';
 
@@ -16,7 +17,8 @@ const routes: Routes = [
     component: TemplateComponent,
     children: [
       { path: '', loadChildren: () => import('src/app/layouts/template/template.module').then(m => m.TemplateModule) }
-    ]
+    ],
+    canActivate: [AuthGuard]
   },
   {
     path: '',
