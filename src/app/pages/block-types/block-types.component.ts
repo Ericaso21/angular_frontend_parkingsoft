@@ -170,6 +170,10 @@ export class BlockTypesComponent implements AfterViewInit, OnDestroy, OnInit {
       } else {
         delete this.blockType.id_block_type;
         delete this.blockType.updated_att;
+        this.blockType.created_att = new Date()
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '');
         this.blockTypeServices.saveBlockType(this.blockType).subscribe(
           (res: any) => {
             if (res['status']) {
@@ -192,6 +196,10 @@ export class BlockTypesComponent implements AfterViewInit, OnDestroy, OnInit {
     this.recaptchaV3Service.execute('action').subscribe((token) => {
       this.blockType.token = token;
       delete this.blockType.created_att;
+      this.blockType.updated_att = new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, '');
       this.blockTypeServices
         .updateBlockType(this.blockType.id_block_type, this.blockType)
         .subscribe(

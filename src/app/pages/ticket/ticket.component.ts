@@ -291,6 +291,10 @@ export class TicketComponent implements AfterViewInit, OnDestroy, OnInit {
         delete this.ticket.id_ticket;
         delete this.ticket.departure_time;
         delete this.ticket.updated_att;
+        this.ticket.created_att = new Date()
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '');
         this.ticketService.saveTicket(this.ticket).subscribe(
           (res: any) => {
             if (res['status']) {
@@ -317,6 +321,10 @@ export class TicketComponent implements AfterViewInit, OnDestroy, OnInit {
       delete this.ticket.created_att;
       delete this.ticket.entry_time;
       delete this.ticket.fk_id_vehicle;
+      this.ticket.updated_att = new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, '');
       this.ticketService
         .updateTicket(this.ticket.id_ticket, this.ticket)
         .subscribe(
