@@ -1,17 +1,23 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subject } from 'rxjs';
 import { Blocks } from 'src/app/interfaces/blocks';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { BlocksService } from 'src/app/services/blocks.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-blocks',
   templateUrl: './blocks.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class BlocksComponent implements AfterViewInit, OnDestroy, OnInit {
   //dataTable configuraciones
@@ -30,18 +36,41 @@ export class BlocksComponent implements AfterViewInit, OnDestroy, OnInit {
     fk_id_block_type: 0,
     block_number: '',
     block_status: 0,
-    created_att: new Date(),
-    updated_att: new Date()
-  }
+    created_att: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+    updated_att: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+  };
 
   //modal actualizar
   edit: boolean = false;
   //open modal
   submitted: boolean = false;
 
-  constructor(private blocksService: BlocksService, private recaptchaV3Service: ReCaptchaV3Service, config: NgbModalConfig, private modalService: NgbModal) {
+  //permit
+  _create: any;
+  _edit: any;
+  _delete: any;
+
+  constructor(
+    private blocksService: BlocksService,
+    private recaptchaV3Service: ReCaptchaV3Service,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
+    private authenticationService: AuthenticationService
+  ) {
     config.backdrop = 'static';
     config.keyboard = false;
+  }
+
+  getCreatePermits() {
+    this._create = this.authenticationService.getCreatePermits('Bloques');
+  }
+
+  getEditPermits() {
+    this._edit = this.authenticationService.getEditPermits('Bloques');
+  }
+
+  getDeletePermits() {
+    this._delete = this.authenticationService.getdeletePermits('Bloques');
   }
 
   open(content: any) {
@@ -54,29 +83,32 @@ export class BlocksComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.getBlockTypes();
+    this.getCreatePermits();
+    this.getEditPermits();
+    this.getDeletePermits();
     this.dtOptions = {
       responsive: true,
       processing: true,
       pagingType: 'full_numbers',
       pageLength: 10,
       language: {
-        url: "//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json"
+        url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json',
       },
       destroy: true,
       autoWidth: true,
-      order: [3, 'asc']
+      order: [1, 'asc'],
     };
   }
 
   ngAfterViewInit(): void {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
-        this.getBlocks(token)
+        this.getBlocks(token);
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   ngOnDestroy(): void {
@@ -92,24 +124,22 @@ export class BlocksComponent implements AfterViewInit, OnDestroy, OnInit {
         (err) => {
           console.log(err);
         }
-      )
+      );
       dtInstance.destroy();
-    })
+    });
   }
 
   getBlockTypes() {
-    this.recaptchaV3Service.execute('action').subscribe(
-      (token) => {
-        this.blocksService.getBlockType(token).subscribe(
-          (res: any) => {
-            this.blockTypes = res;
-          },
-          (error: any) => {
-            console.log(error);
-          }
-        )
-      }
-    )
+    this.recaptchaV3Service.execute('action').subscribe((token) => {
+      this.blocksService.getBlockType(token).subscribe(
+        (res: any) => {
+          this.blockTypes = res;
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+    });
   }
 
   getBlocks(token: any) {
@@ -121,70 +151,64 @@ export class BlocksComponent implements AfterViewInit, OnDestroy, OnInit {
       (error: any) => {
         console.log(error);
       }
-    )
+    );
   }
 
   getBlock(id: string) {
-    this.recaptchaV3Service.execute('action').subscribe(
-      (token) => {
-        this.blocksService.getBlock(token, id).subscribe(
-          (res: any) => {
-            this.block = res;
-            this.edit = true;
-          },
-          (error: any) => {
-            console.log(error);
-          }
-        )
-      }
-    )
+    this.recaptchaV3Service.execute('action').subscribe((token) => {
+      this.blocksService.getBlock(token, id).subscribe(
+        (res: any) => {
+          this.block = res;
+          this.edit = true;
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+    });
   }
 
   saveBlock() {
-    this.recaptchaV3Service.execute('action').subscribe(
-      (token) => {
-        this.block.token = token;
-        delete this.block.id_block;
-        delete this.block.updated_att;
-        this.blocksService.saveBlock(this.block).subscribe(
-          (res: any) => {
-            if (res['status']) {
-              Swal.fire('¡Bloque!', res['message'], 'success');
-              this.rerender();
-              this.close();
-            }
-          },
-          (error: any) => {
-            if (error['status'] == 404) {
-              Swal.fire('¡Error!', error['error']['message'], 'error');
-            }
+    this.recaptchaV3Service.execute('action').subscribe((token) => {
+      this.block.token = token;
+      delete this.block.id_block;
+      delete this.block.updated_att;
+      this.blocksService.saveBlock(this.block).subscribe(
+        (res: any) => {
+          if (res['status']) {
+            Swal.fire('¡Bloque!', res['message'], 'success');
+            this.rerender();
+            this.close();
           }
-        )
-      }
-    )
+        },
+        (error: any) => {
+          if (error['status'] == 404) {
+            Swal.fire('¡Error!', error['error']['message'], 'error');
+          }
+        }
+      );
+    });
   }
 
   updateBlock() {
-    this.recaptchaV3Service.execute('action').subscribe(
-      (token) => {
-        this.block.token = token;
-        delete this.block.created_att;
-        this.blocksService.updateBlock(this.block, this.block.id_block).subscribe(
-          (res: any) => {
-            if (res['status']) {
-              Swal.fire('¡Bloque!', res['message'], 'success');
-              this.rerender();
-              this.close();
-            }
-          },
-          (error: any) => {
-            if (error['status'] == 404) {
-              Swal.fire('¡Error!', error['error']['message'], 'error');
-            }
+    this.recaptchaV3Service.execute('action').subscribe((token) => {
+      this.block.token = token;
+      delete this.block.created_att;
+      this.blocksService.updateBlock(this.block, this.block.id_block).subscribe(
+        (res: any) => {
+          if (res['status']) {
+            Swal.fire('¡Bloque!', res['message'], 'success');
+            this.rerender();
+            this.close();
           }
-        )
-      }
-    )
+        },
+        (error: any) => {
+          if (error['status'] == 404) {
+            Swal.fire('¡Error!', error['error']['message'], 'error');
+          }
+        }
+      );
+    });
   }
 
   deleteBlock(id: string) {
@@ -195,8 +219,8 @@ export class BlocksComponent implements AfterViewInit, OnDestroy, OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar'
-    }).then(result => {
+      confirmButtonText: 'Si, eliminar',
+    }).then((result) => {
       if (result.value) {
         this.recaptchaV3Service.execute('action').subscribe(
           (token) => {
@@ -213,14 +237,13 @@ export class BlocksComponent implements AfterViewInit, OnDestroy, OnInit {
                   Swal.fire('¡Error!', error['error']['message'], 'error');
                 }
               }
-            )
+            );
           },
           (error: any) => {
-            console.log(error)
+            console.log(error);
           }
-        )
+        );
       }
-    })
+    });
   }
-
 }

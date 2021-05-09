@@ -1,4 +1,4 @@
 export interface Bill {
-    token?: string,
-    id_ticket?: number
+  token?: string;
+  id_ticket?: number;
 }

@@ -1,101 +1,151 @@
 <!-- modal -->
 <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Bloques</h4>
-      <button type="button" id="closeModal" class="close" aria-label="Close"
-        (click)="submitted = false; d('Cross click');close(); edit = false">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Bloques</h4>
+    <button
+      type="button"
+      id="closeModal"
+      class="close"
+      aria-label="Close"
+      (click)="submitted = false; d('Cross click'); close(); edit = false"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 
-    <!--Formulario-->
-    <div class="modal-body">
-      <form>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="name_block_type">Nombre del Bloque</label>
-            <input type="text" name="name_block_type" class="form-control" placeholder="Nombre del Bloque" [(ngModel)]="blockType.name_block_type">
-          </div>
-
-          <div class="form-group col-md-6">
-            <label for="block_status">Estado Bloque</label>
-            <select class="form-control" name="block_status" [(ngModel)]="blockType.block_status">
-              <option value="0">Seleccione...</option>
-              <option value="1">Activo</option>
-              <option value="2">Inactivo</option>
-            </select>
-          </div>
+  <!--Formulario-->
+  <div class="modal-body">
+    <form>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="name_block_type">Nombre del Bloque</label>
+          <input
+            type="text"
+            name="name_block_type"
+            class="form-control"
+            placeholder="Nombre del Bloque"
+            [(ngModel)]="blockType.name_block_type"
+          />
         </div>
 
-      </form>
-      
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark"
-        (click)="submitted = false; c('Save click'); close(); edit = false">
-        Cerrar
-      </button>
-      <button class="btn btn-success" (click)="edit ? updateBlockType() : saveBlockType()">
-        Guardar
-      </button>
-    </div>
-  </ng-template>
-  <!-- Page content -->
-  <div class="container-fluid mt--7">
-    <!-- Table -->
-    <div class="row">
-      <div class="col">
-        <div class="card shadow">
-          <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
-            <h3 class="mb-0">Bloques</h3>
+        <div class="form-group col-md-6">
+          <label for="block_status">Estado Bloque</label>
+          <select
+            class="form-control"
+            name="block_status"
+            [(ngModel)]="blockType.block_status"
+          >
+            <option value="0">Seleccione...</option>
+            <option value="1">Activo</option>
+            <option value="2">Inactivo</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click'); close(); edit = false"
+    >
+      Cerrar
+    </button>
+    <button
+      class="btn btn-success"
+      (click)="edit ? updateBlockType() : saveBlockType()"
+    >
+      Guardar
+    </button>
+  </div>
+</ng-template>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div
+          class="card-header border-0 text-white d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Bloques</h3>
+          <ng-template [ngIf]="_create">
             <button class="btn btn-success btn-sm" (click)="open(content)">
               <i class="ni ni-fat-add">Crear Bloques</i>
             </button>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-                class="table align-items-center table-flush">
-                <thead class="thead-light">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre de Bloque</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor = "let blockType of blockTypes; let indice = index">
-                      <td>{{indice +1}}</td>
-                      <td>{{blockType.name_block_type}}</td>
-                      <td *ngIf="blockType.block_status == 1; else opposite_case">
-                        <span class="badge badge-success">Activo</span>
-                      </td>
-                      <ng-template #opposite_case>
-                        <td>
-                          <span class="badge badge-danger">Cerrado</span>
-                        </td>
-                      </ng-template>
-
-                      <td>
-                        <div class="btn-group btn-group-sm text-center">
-                          <button class="btn btn-primary btn-sm" (click)="getOneBlockType (blockType.id_block_type); open(content)" title="Editar"
-                            >
+          </ng-template>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+              class="table align-items-center table-flush"
+            >
+              <thead class="thead-light">
+                <tr>
+                  <ng-template
+                    [ngIf]="_edit == false && _delete == false"
+                    [ngIfElse]="loading"
+                  ></ng-template>
+                  <ng-template #loading
+                    ><th scope="col">Acciones</th></ng-template
+                  >
+                  <th scope="col">#</th>
+                  <th scope="col">Nombre de Bloque</th>
+                  <th scope="col">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let blockType of blockTypes; let indice = index">
+                  <ng-template
+                    [ngIf]="_edit == false && _delete == false"
+                    [ngIfElse]="loading2"
+                  ></ng-template>
+                  <ng-template #loading2>
+                    <td>
+                      <div class="btn-group btn-group-sm text-center">
+                        <ng-template [ngIf]="_edit">
+                          <button
+                            class="btn btn-primary btn-sm"
+                            (click)="
+                              getOneBlockType(blockType.id_block_type);
+                              open(content)
+                            "
+                            title="Editar"
+                          >
                             <i class="fas fa-pencil-alt"></i>
                           </button>
-                          <button class="btn btn-danger btn-sm" title="Eliminar" (click)="deleteBlockType (blockType.id_block_type)" >
+                        </ng-template>
+                        <ng-template [ngIf]="_delete">
+                          <button
+                            class="btn btn-danger btn-sm"
+                            title="Eliminar"
+                            (click)="deleteBlockType(blockType.id_block_type)"
+                          >
                             <i class="fas fa-trash-alt"></i>
                           </button>
-                        </div>
-                      </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+                        </ng-template>
+                      </div>
+                    </td>
+                  </ng-template>
+                  <td>{{ indice + 1 }}</td>
+                  <td>{{ blockType.name_block_type }}</td>
+                  <td *ngIf="blockType.block_status == 1; else opposite_case">
+                    <span class="badge badge-success">Activo</span>
+                  </td>
+                  <ng-template #opposite_case>
+                    <td>
+                      <span class="badge badge-danger">Cerrado</span>
+                    </td>
+                  </ng-template>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-    
+</div>

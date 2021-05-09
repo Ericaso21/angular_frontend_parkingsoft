@@ -19,8 +19,6 @@ import { BillComponent } from 'src/app/pages/bill/bill.component';
 import { VehicleComponent } from 'src/app/pages/vehicle/vehicle.component';
 import { BlocksComponent } from 'src/app/pages/blocks/blocks.component';
 
-
-
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -33,7 +31,7 @@ import { BlocksComponent } from 'src/app/pages/blocks/blocks.component';
     BillComponent,
     VehicleComponent,
     TicketComponent,
-    BlocksComponent
+    BlocksComponent,
   ],
 
   imports: [
@@ -43,7 +41,7 @@ import { BlocksComponent } from 'src/app/pages/blocks/blocks.component';
     HttpClientModule,
     NgbModule,
     ClipboardModule,
-    DataTablesModule
-  ]
+    DataTablesModule,
+  ],
 })
-export class TemplateModule { }
+export class TemplateModule {}

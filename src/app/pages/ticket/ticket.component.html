@@ -1,224 +1,322 @@
 <!-- modal -->
 <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Ticket</h4>
-        <button type="button" id="closeModal" class="close" aria-label="Close"
-            (click)="submitted = false; d('Cross click');close(); edit = false">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form autocomplete="off">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="pk_fk_id_block">Bloque</label>
-                    <select name="pk_fk_id_block" class="form-control" [(ngModel)]="ticket.pk_fk_id_block">
-                        <option value="0">Seleccione...</option>
-                        <option *ngFor="let block of blocks" [value]="block.id_block">
-                            {{block.name_block_type}}-{{block.block_number}}</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="fk_id_vehicle">Placa vehiculo</label>
-                    <select name="fk_id_vehicle" class="form-control" [(ngModel)]="ticket.fk_id_vehicle">
-                        <option value="0">Seleccione...</option>
-                        <option *ngFor="let vehicle of vehicles" [value]="vehicle.vehicle_plate">
-                            {{vehicle.vehicle_plate}}-{{vehicle.document_number}}-{{vehicle.first_name}}-{{vehicle.surname}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="entry_time">Hora entrada</label>
-                    <input type="datetime-local" name="entry_time" class="form-control"
-                        [(ngModel)]="ticket.entry_time" />
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="departure_time">Hora salida</label>
-                    <input type="datetime-local" name="departure_time" class="form-control"
-                        [(ngModel)]="ticket.departure_time" />
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark"
-            (click)="submitted = false; c('Save click'); close(); edit = false">
-            Cerrar
-        </button>
-        <button class="btn btn-success" (click)="edit ? updateTicket() : saveTicket()">
-            Guardar
-        </button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Ticket</h4>
+    <button
+      type="button"
+      id="closeModal"
+      class="close"
+      aria-label="Close"
+      (click)="submitted = false; d('Cross click'); close(); edit = false"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="pk_fk_id_block">Bloque</label>
+          <select
+            name="pk_fk_id_block"
+            class="form-control"
+            [(ngModel)]="ticket.pk_fk_id_block"
+          >
+            <option value="0">Seleccione...</option>
+            <option *ngFor="let block of blocks" [value]="block.id_block">
+              {{ block.name_block_type }}-{{ block.block_number }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="fk_id_vehicle">Placa vehiculo</label>
+          <select
+            name="fk_id_vehicle"
+            class="form-control"
+            [(ngModel)]="ticket.fk_id_vehicle"
+          >
+            <option value="0">Seleccione...</option>
+            <option
+              *ngFor="let vehicle of vehicles"
+              [value]="vehicle.vehicle_plate"
+            >
+              {{ vehicle.vehicle_plate }}-{{ vehicle.document_number }}-{{
+                vehicle.first_name
+              }}-{{ vehicle.surname }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="entry_time">Hora entrada</label>
+          <input
+            type="datetime-local"
+            name="entry_time"
+            class="form-control"
+            [(ngModel)]="ticket.entry_time"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="departure_time">Hora salida</label>
+          <input
+            type="datetime-local"
+            name="departure_time"
+            class="form-control"
+            [(ngModel)]="ticket.departure_time"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click'); close(); edit = false"
+    >
+      Cerrar
+    </button>
+    <button
+      class="btn btn-success"
+      (click)="edit ? updateTicket() : saveTicket()"
+    >
+      Guardar
+    </button>
+  </div>
 </ng-template>
 
 <!-- Page content -->
 <div class="container-fluid mt--7">
-    <!-- Table -->
-    <div class="row">
-        <div class="col">
-            <div class="card shadow">
-                <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">Ticket</h3>
-                    <button class="btn btn-success btn-sm" (click)="open(content); getBlocks()">
-                        <i class="ni ni-fat-add">Crear ticket</i>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-                            class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Acciones</th>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Placa vehiculo</th>
-                                    <th scope="col">Bloque</th>
-                                    <th scope="col">Hora entrada</th>
-                                    <th scope="col">Hora salida</th>
-                                    <th scope="col">Total tiempo</th>
-                                    <th scope="col">Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let ticket of tickets; let indice = index">
-                                    <td>
-                                        <div class="btn-group btn-group-sm text-center">
-                                            <button class="btn btn-secondary btn-sm" title="Imprimir"
-                                                (click)="getTicketPDF(ticket.id_ticket); openModal(content2)">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn btn-primary btn-sm" title="Editar"
-                                                (click)="getBlocksClose();getTicket(ticket.id_ticket); open(content)">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm" title="Eliminar"
-                                                (click)="deleteTicket(ticket.id_ticket)">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td>{{ indice + 1 }}</td>
-                                    <td>{{ ticket.vehicle_plate }}</td>
-                                    <td>{{ ticket.block_number }}</td>
-                                    <td>{{ ticket.entry_time }}</td>
-                                    <td>{{ ticket.departure_time }}</td>
-                                    <td>{{ ticket.total_time }}</td>
-                                    <td *ngIf="ticket.tickets_status == 1; else opposite_case">
-                                        <span class="badge badge-success">Activo</span>
-                                    </td>
-                                    <ng-template #opposite_case>
-                                        <td>
-                                            <span class="badge badge-danger">Cerrado</span>
-                                        </td>
-                                    </ng-template>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div
+          class="card-header border-0 text-white d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Ticket</h3>
+          <ng-template [ngIf]="_create">
+            <button
+              class="btn btn-success btn-sm"
+              (click)="open(content); getBlocks()"
+            >
+              <i class="ni ni-fat-add">Crear ticket</i>
+            </button>
+          </ng-template>
         </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+              class="table align-items-center table-flush"
+            >
+              <thead class="thead-light">
+                <tr>
+                  <ng-template
+                    [ngIf]="_edit == false && _delete == false"
+                    [ngIfElse]="loading"
+                  ></ng-template>
+                  <ng-template #loading
+                    ><th scope="col">Acciones</th></ng-template
+                  >
+                  <th scope="col">#</th>
+                  <th scope="col">Placa vehiculo</th>
+                  <th scope="col">Bloque</th>
+                  <th scope="col">Hora entrada</th>
+                  <th scope="col">Hora salida</th>
+                  <th scope="col">Total tiempo</th>
+                  <th scope="col">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ticket of tickets; let indice = index">
+                  <ng-template
+                    [ngIf]="
+                      _edit == false && _delete == false && _view == false
+                    "
+                    [ngIfElse]="loading2"
+                  ></ng-template>
+                  <ng-template #loading2>
+                    <td>
+                      <div class="btn-group btn-group-sm text-center">
+                        <ng-template [ngIf]="_view">
+                          <button
+                            class="btn btn-secondary btn-sm"
+                            title="Imprimir"
+                            (click)="
+                              getTicketPDF(ticket.id_ticket);
+                              openModal(content2)
+                            "
+                          >
+                            <i class="fas fa-eye"></i>
+                          </button>
+                        </ng-template>
+                        <ng-template [ngIf]="_edit">
+                          <button
+                            class="btn btn-primary btn-sm"
+                            title="Editar"
+                            (click)="
+                              getBlocksClose();
+                              getTicket(ticket.id_ticket);
+                              open(content)
+                            "
+                          >
+                            <i class="fas fa-pencil-alt"></i>
+                          </button>
+                        </ng-template>
+                        <ng-template [ngIf]="_delete">
+                          <button
+                            class="btn btn-danger btn-sm"
+                            title="Eliminar"
+                            (click)="deleteTicket(ticket.id_ticket)"
+                          >
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                        </ng-template>
+                      </div>
+                    </td>
+                  </ng-template>
+                  <td>{{ indice + 1 }}</td>
+                  <td>{{ ticket.vehicle_plate }}</td>
+                  <td>{{ ticket.block_number }}</td>
+                  <td>{{ ticket.entry_time }}</td>
+                  <td>{{ ticket.departure_time }}</td>
+                  <td>{{ ticket.total_time }}</td>
+                  <td *ngIf="ticket.tickets_status == 1; else opposite_case">
+                    <span class="badge badge-success">Activo</span>
+                  </td>
+                  <ng-template #opposite_case>
+                    <td>
+                      <span class="badge badge-danger">Cerrado</span>
+                    </td>
+                  </ng-template>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- modal-ticket -->
 <ng-template #content2 let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Ticket</h4>
-        <button type="button" id="closeModalImprimir" class="close" aria-label="Close"
-            (click)="submitted = false; d('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Ticket</h4>
+    <button
+      type="button"
+      id="closeModalImprimir"
+      class="close"
+      aria-label="Close"
+      (click)="submitted = false; d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="col-md-12" id="htmlData">
+      <table class="table table-borderless">
+        <tr>
+          <th>Fecha:</th>
+          <td>{{ date }}</td>
+        </tr>
+        <tr>
+          <th>N° ticket:</th>
+          <td>{{ pdfticket?.id_ticket }}</td>
+        </tr>
+        <tr>
+          <th>Placa:</th>
+          <td>{{ pdfticket?.fk_id_vehicle }}</td>
+        </tr>
+        <tr>
+          <th>Bloque:</th>
+          <td>{{ pdfticket?.pk_fk_id_block }}</td>
+        </tr>
+        <tr>
+          <th>Hora entrada</th>
+          <td>{{ pdfticket?.entry_time }}</td>
+        </tr>
+      </table>
     </div>
-    <div class="modal-body">
-        <div class="col-md-12" id="htmlData">
-            <table class="table table-borderless">
-                <tr>
-                    <th>Fecha:</th>
-                    <td>{{date}}</td>
-                </tr>
-                <tr>
-                    <th>N° ticket:</th>
-                    <td>{{pdfticket?.id_ticket}}</td>
-                </tr>
-                <tr>
-                    <th>Placa:</th>
-                    <td>{{pdfticket?.fk_id_vehicle}}</td>
-                </tr>
-                <tr>
-                    <th>Bloque: </th>
-                    <td>{{pdfticket?.pk_fk_id_block}}</td>
-                </tr>
-                <tr>
-                    <th>Hora entrada</th>
-                    <td>{{pdfticket?.entry_time}}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="submitted = false; c('Save click')">
-            Cerrar
-        </button>
-        <button class="btn btn-danger" (click)="downloadPDF()">Imprimir PDF</button>
-    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click')"
+    >
+      Cerrar
+    </button>
+    <button class="btn btn-danger" (click)="downloadPDF()">Imprimir PDF</button>
+  </div>
 </ng-template>
 
 <!-- modal-bill -->
 <ng-template #content3 let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Factura</h4>
-        <button type="button" id="closeModalbill" class="close" aria-label="Close"
-            (click)="submitted = false; d('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="col-md-12" id="htmlData">
-        <table class="table table-borderless">
-            <tr>
-                <th>Fecha</th>
-                <td>{{billTicket?.date_bill}}</td>
-                <th>N° ticket</th>
-                <td>{{billTicket?.id_ticket}}</td>
-            </tr>
-            <tr>
-                <th>Placa</th>
-                <td>{{billTicket?.fk_id_vehicle}}</td>
-                <th>Bloque</th>
-                <td>{{billTicket?.pk_fk_id_block}}</td>
-            </tr>
-            <tr>
-                <th>Cliente</th>
-                <td>{{billTicket?.fk_document_number}}</td>
-                <th>Nombre</th>
-                <td>{{billTicket?.first_name}} {{billTicket?.surname}}</td>
-            </tr>
-            <tr>
-                <th>Hora entrada</th>
-                <td>{{billTicket?.entry_time}}</td>
-                <th>Hora salida</th>
-                <td>{{billTicket?.departure_time}}</td>
-            </tr>
-            <tr>
-                <th>Total tiempo</th>
-                <td>{{billTicket?.total_time}}</td>
-                <th>Subtotal</th>
-                <td>{{billTicket?.subtotal_value}}</td>
-            </tr>
-            <tr>
-                <th>Valor IVA</th>
-                <td>{{billTicket?.iva_value}}</td>
-                <th>Total</th>
-                <td>{{billTicket?.total_value}}</td>
-            </tr>
-        </table>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="submitted = false; c('Save click')">
-            Cerrar
-        </button>
-        <button class="btn btn-danger" (click)="downloadPDF()">Imprimir PDF</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Factura</h4>
+    <button
+      type="button"
+      id="closeModalbill"
+      class="close"
+      aria-label="Close"
+      (click)="submitted = false; d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="col-md-12" id="htmlData">
+    <table class="table table-borderless">
+      <tr>
+        <th>Fecha</th>
+        <td>{{ billTicket?.date_bill }}</td>
+        <th>N° ticket</th>
+        <td>{{ billTicket?.id_ticket }}</td>
+      </tr>
+      <tr>
+        <th>Placa</th>
+        <td>{{ billTicket?.fk_id_vehicle }}</td>
+        <th>Bloque</th>
+        <td>{{ billTicket?.pk_fk_id_block }}</td>
+      </tr>
+      <tr>
+        <th>Cliente</th>
+        <td>{{ billTicket?.fk_document_number }}</td>
+        <th>Nombre</th>
+        <td>{{ billTicket?.first_name }} {{ billTicket?.surname }}</td>
+      </tr>
+      <tr>
+        <th>Hora entrada</th>
+        <td>{{ billTicket?.entry_time }}</td>
+        <th>Hora salida</th>
+        <td>{{ billTicket?.departure_time }}</td>
+      </tr>
+      <tr>
+        <th>Total tiempo</th>
+        <td>{{ billTicket?.total_time }}</td>
+        <th>Subtotal</th>
+        <td>{{ billTicket?.subtotal_value }}</td>
+      </tr>
+      <tr>
+        <th>Valor IVA</th>
+        <td>{{ billTicket?.iva_value }}</td>
+        <th>Total</th>
+        <td>{{ billTicket?.total_value }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click')"
+    >
+      Cerrar
+    </button>
+    <button class="btn btn-danger" (click)="downloadPDF()">Imprimir PDF</button>
+  </div>
 </ng-template>
