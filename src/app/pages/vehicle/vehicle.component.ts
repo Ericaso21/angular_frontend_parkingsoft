@@ -198,6 +198,10 @@ export class VehicleComponent implements AfterViewInit, OnDestroy, OnInit {
           Swal.fire('Atención', 'Todos los campos son obligarios', 'error');
         } else {
           delete this.vehicle.updated_att;
+          this.vehicle.created_att = new Date()
+            .toISOString()
+            .replace(/T/, ' ')
+            .replace(/\..+/, '');
           this.vehicleServices.saveVehicle(this.vehicle).subscribe(
             (res: any) => {
               if (res['status']) {
@@ -223,6 +227,10 @@ export class VehicleComponent implements AfterViewInit, OnDestroy, OnInit {
       (token) => {
         this.vehicle.token = token;
         delete this.vehicle.created_att;
+        this.vehicle.updated_att = new Date()
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '');
         this.vehicleServices
           .updateVehicle(this.vehicle.vehicle_plate, this.vehicle)
           .subscribe(

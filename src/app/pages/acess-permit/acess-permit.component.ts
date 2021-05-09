@@ -95,8 +95,14 @@ export class AcessPermitComponent implements AfterViewInit, OnDestroy, OnInit {
       create_modules: 0,
       edit_modules: 0,
       delete_modules: 0,
-      created_att: new Date(),
-      updated_att: new Date(),
+      created_att: new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, ''),
+      updated_att: new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, ''),
     };
   }
 
@@ -252,6 +258,10 @@ export class AcessPermitComponent implements AfterViewInit, OnDestroy, OnInit {
         }
         delete this.accessPermit.id_access_permits;
         delete this.accessPermit.updated_att;
+        this.accessPermit.created_att = new Date()
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '');
         this.accessPermitService.saveAccessPermit(this.accessPermit).subscribe(
           (res: any) => {
             if (res['status']) {
@@ -294,6 +304,10 @@ export class AcessPermitComponent implements AfterViewInit, OnDestroy, OnInit {
         this.accessPermit.delete_modules = '2';
       }
       delete this.accessPermit.created_att;
+      this.accessPermit.updated_att = new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, '');
       this.accessPermitService
         .updateAccessPermit(
           this.accessPermit.id_access_permits,

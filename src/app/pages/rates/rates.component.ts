@@ -190,6 +190,10 @@ export class RatesComponent implements AfterViewInit, OnDestroy, OnInit {
         } else {
           delete this.rate.id_rate;
           delete this.rate.updated_att;
+          this.rate.created_att = new Date()
+            .toISOString()
+            .replace(/T/, ' ')
+            .replace(/\..+/, '');
           this.ratesServices.saveRates(this.rate).subscribe(
             (res: any) => {
               if (res['status']) {
@@ -215,6 +219,10 @@ export class RatesComponent implements AfterViewInit, OnDestroy, OnInit {
       (token) => {
         this.rate.token = token;
         delete this.rate.created_att;
+        this.rate.updated_att = new Date()
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '');
         this.ratesServices.updateRate(this.rate.id_rate, this.rate).subscribe(
           (res: any) => {
             Swal.fire('Tarifa!', res['message'], 'success');

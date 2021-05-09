@@ -277,6 +277,10 @@ export class UserComponent implements AfterViewInit, OnDestroy, OnInit {
             '123456$#@$^@1ERF',
             this.user.password_user
           );
+          this.user.created_att = new Date()
+            .toISOString()
+            .replace(/T/, ' ')
+            .replace(/\..+/, '');
           this.userService.saveUser(this.user).subscribe(
             (res: any) => {
               if (res['status']) {
@@ -318,6 +322,10 @@ export class UserComponent implements AfterViewInit, OnDestroy, OnInit {
             this.user.password_user
           );
         }
+        this.user.updated_att = new Date()
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '');
         this.userService
           .updateUser(this.user.document_number, this.user)
           .subscribe(

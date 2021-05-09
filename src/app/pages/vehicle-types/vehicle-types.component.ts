@@ -167,6 +167,10 @@ export class VehicleTypesComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         delete this.vehicleType.id_vehicle_type;
         delete this.vehicleType.updated_att;
+        this.vehicleType.created_att = new Date()
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '');
         this.vehicleTypeServices.saveVehicleType(this.vehicleType).subscribe(
           (res: any) => {
             if (res['status']) {
@@ -188,6 +192,10 @@ export class VehicleTypesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.recaptchaV3Service.execute('action').subscribe((token) => {
       this.vehicleType.token = token;
       delete this.vehicleType.created_att;
+      this.vehicleType.updated_att = new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, '');
       this.vehicleTypeServices
         .updateVehicleType(this.vehicleType.id_vehicle_type, this.vehicleType)
         .subscribe(

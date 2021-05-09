@@ -83,8 +83,14 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       name_role: '',
       description_role: '',
       role_status: 0,
-      created_att: new Date(),
-      updated_att: new Date(),
+      created_att: new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, ''),
+      updated_att: new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, ''),
     };
   }
 
@@ -175,6 +181,10 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
         } else {
           delete this.role.id_roles;
           delete this.role.updated_att;
+          this.role.created_att = new Date()
+            .toISOString()
+            .replace(/T/, ' ')
+            .replace(/\..+/, '');
           this.rolesService.saveRole(this.role).subscribe(
             (res: any) => {
               if (res['status']) {
@@ -202,6 +212,10 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       (token) => {
         this.role.token = token;
         delete this.role.created_att;
+        this.role.updated_att = new Date()
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '');
         this.rolesService.updateRole(this.role.id_roles, this.role).subscribe(
           (res: any) => {
             Swal.fire('¡Role!', res['message'], 'success');
