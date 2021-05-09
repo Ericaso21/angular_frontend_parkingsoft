@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common'
+import { Location } from '@angular/common';
 import { ROUTES } from '../sidebar/sidebar.component';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class NavbarComponent implements OnInit {
   public focus: any;
@@ -14,12 +13,15 @@ export class NavbarComponent implements OnInit {
   public location: Location;
   public user: any = {};
   public userName: any;
-  constructor(location: Location, public authenticationService: AuthenticationService) {
+  constructor(
+    location: Location,
+    public authenticationService: AuthenticationService
+  ) {
     this.location = location;
   }
 
   ngOnInit(): void {
-    this.listTitles = ROUTES.filter(listTitle => listTitle);
+    this.listTitles = ROUTES.filter((listTitle) => listTitle);
     this.user = localStorage.getItem('user');
     let user = JSON.parse(this.user);
     this.userName = atob(user.userName) + ' ' + atob(user.surname);
@@ -42,5 +44,4 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.authenticationService.logout();
   }
-
 }

@@ -8,6 +8,10 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "development": "ng serve --configuration=development",
+    "production": "ng serve --configuration=production",
+    "build:development": "ng build --configuration=development",
+    "build:production": "ng build --configuration=production",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
   },
   "private": true,
@@ -23,6 +27,7 @@
     "@angular/platform-browser-dynamic": "~11.0.5",
     "@angular/router": "~11.0.5",
     "@ng-bootstrap/ng-bootstrap": "7.0.0",
+    "angular-cli-ghpages": "^1.0.0-rc.1",
     "angular-datatables": "^11.1.1",
     "bootstrap": "4.5.2",
     "chart.js": "2.9.3",

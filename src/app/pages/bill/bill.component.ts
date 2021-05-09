@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
@@ -8,8 +14,7 @@ import { BillsService } from 'src/app/services/bills.service';
 @Component({
   selector: 'app-bill',
   templateUrl: './bill.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class BillComponent implements AfterViewInit, OnDestroy, OnInit {
   //dataTable configuraciones
@@ -23,7 +28,12 @@ export class BillComponent implements AfterViewInit, OnDestroy, OnInit {
   //open modal
   submitted: boolean = false;
 
-  constructor(private billsService: BillsService, private recaptchaV3Service: ReCaptchaV3Service, config: NgbModalConfig, private modalService: NgbModal) {
+  constructor(
+    private billsService: BillsService,
+    private recaptchaV3Service: ReCaptchaV3Service,
+    config: NgbModalConfig,
+    private modalService: NgbModal
+  ) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
@@ -39,23 +49,23 @@ export class BillComponent implements AfterViewInit, OnDestroy, OnInit {
       pagingType: 'full_numbers',
       pageLength: 10,
       language: {
-        url: "//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json"
+        url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json',
       },
       destroy: true,
       autoWidth: true,
-      order: [1, 'asc']
+      order: [1, 'asc'],
     };
   }
 
   ngAfterViewInit(): void {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
-        this.getBills(token)
+        this.getBills(token);
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   ngOnDestroy(): void {
@@ -71,9 +81,9 @@ export class BillComponent implements AfterViewInit, OnDestroy, OnInit {
         (err) => {
           console.log(err);
         }
-      )
+      );
       dtInstance.destroy();
-    })
+    });
   }
 
   getBills(token: any) {
@@ -83,9 +93,8 @@ export class BillComponent implements AfterViewInit, OnDestroy, OnInit {
         this.dtTrigger.next();
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
-
 }

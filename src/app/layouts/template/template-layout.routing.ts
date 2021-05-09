@@ -10,17 +10,48 @@ import { VehicleComponent } from 'src/app/pages/vehicle/vehicle.component';
 import { TicketComponent } from 'src/app/pages/ticket/ticket.component';
 import { BillComponent } from 'src/app/pages/bill/bill.component';
 import { BlocksComponent } from 'src/app/pages/blocks/blocks.component';
+import { DashboardGuard } from 'src/app/guards/permit/dashboard.guard';
+import { RolesGuard } from 'src/app/guards/permit/roles.guard';
+import { UsuariosGuard } from 'src/app/guards/permit/usuarios.guard';
+import { BillGuard } from 'src/app/guards/permit/bill.guard';
+import { BlockTypesGuard } from 'src/app/guards/permit/block-types.guard';
+import { BlocksGuard } from 'src/app/guards/permit/blocks.guard';
+import { PermitGuard } from 'src/app/guards/permit/permit.guard';
+import { RatesGuard } from 'src/app/guards/permit/rates.guard';
+import { TicketGuard } from 'src/app/guards/permit/ticket.guard';
+import { VehicleTypesGuard } from 'src/app/guards/permit/vehicle-types.guard';
+import { VehiclesGuard } from 'src/app/guards/permit/vehicles.guard';
 
 export const TemplateRoutingModule: Routes = [
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'roles', component: RolesComponent },
-    { path: 'blocktypes', component: BlockTypesComponent },
-    { path: 'rates', component: RatesComponent },
-    { path: 'vehicleTypes', component: VehicleTypesComponent },
-    { path: 'user', component: UserComponent },
-    { path: 'accessPermit', component: AcessPermitComponent },
-    { path: 'bill', component: BillComponent },
-    { path: 'vehicle', component: VehicleComponent },
-    { path: 'ticket', component: TicketComponent },
-    { path: 'blocks', component: BlocksComponent }
-]
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [DashboardGuard],
+  },
+  { path: 'roles', component: RolesComponent, canActivate: [RolesGuard] },
+  {
+    path: 'blocktypes',
+    component: BlockTypesComponent,
+    canActivate: [BlockTypesGuard],
+  },
+  { path: 'rates', component: RatesComponent, canActivate: [RatesGuard] },
+  {
+    path: 'vehicleTypes',
+    component: VehicleTypesComponent,
+    canActivate: [VehicleTypesGuard],
+  },
+  { path: 'user', component: UserComponent, canActivate: [UsuariosGuard] },
+  {
+    path: 'accessPermit',
+    component: AcessPermitComponent,
+    canActivate: [PermitGuard],
+  },
+  { path: 'bill', component: BillComponent, canActivate: [BillGuard] },
+  {
+    path: 'vehicle',
+    component: VehicleComponent,
+    canActivate: [VehiclesGuard],
+  },
+  { path: 'ticket', component: TicketComponent, canActivate: [TicketGuard] },
+  { path: 'blocks', component: BlocksComponent, canActivate: [BlocksGuard] },
+];

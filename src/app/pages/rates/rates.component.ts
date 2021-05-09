@@ -1,19 +1,25 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subject } from 'rxjs';
 import { Rates } from 'src/app/interfaces/rates';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { RatesService } from 'src/app/services/rates.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-rates',
   templateUrl: './rates.component.html',
-  styles: [
-  ]
+  styles: [],
 })
-export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
+export class RatesComponent implements AfterViewInit, OnDestroy, OnInit {
   //dataTable configuraciones
   @ViewChild(DataTableDirective, { static: false })
   dtElement!: DataTableDirective;
@@ -24,8 +30,7 @@ export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
   dtTrigger: Subject<any> = new Subject<any>();
 
   //definicion NgModel
-  rate:Rates | any = {
-  
+  rate: Rates | any = {
     token: '',
     id_rate: 0,
     fk_id_vehicle_type: 0,
@@ -33,72 +38,91 @@ export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
     hourly_rate: '',
     day_rate: '',
     rate_status: 0,
-    created_att: new Date(),
-    updated_att: new Date()
-
-  }
+    created_att: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+    updated_att: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+  };
 
   //modal actualizar
   edit: boolean = false;
   //open modal
   submitted: boolean = false;
+  //permit
+  _create: any;
+  _edit: any;
+  _delete: any;
 
-
-  constructor(private ratesServices: RatesService,  private recaptchaV3Service: ReCaptchaV3Service, config: NgbModalConfig, private modalService: NgbModal)
-  {     
-  config.backdrop = 'static';
-  config.keyboard = false;
+  constructor(
+    private ratesServices: RatesService,
+    private recaptchaV3Service: ReCaptchaV3Service,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
+    private authenticationService: AuthenticationService
+  ) {
+    config.backdrop = 'static';
+    config.keyboard = false;
   }
-  
+
+  getCreatePermits() {
+    this._create = this.authenticationService.getCreatePermits('Tarifas');
+  }
+
+  getEditPermits() {
+    this._edit = this.authenticationService.getEditPermits('Tarifas');
+  }
+
+  getDeletePermits() {
+    this._delete = this.authenticationService.getdeletePermits('Tarifas');
+  }
+
   open(content: any) {
     this.modalService.open(content);
   }
-
 
   close() {
     document.getElementById('closeModal')?.click();
   }
 
-  getVehicleType(){
-    this.recaptchaV3Service.execute('action').subscribe(
-      (token)=>{
-        this.ratesServices.getVehicleType(token).subscribe(
-          (res:any)=>{
-            this.vehicleType=res
-          }
-          ,(error:any)=>{
-            console.log(error)
-          }
-        )
-      }
-    )
+  getVehicleType() {
+    this.recaptchaV3Service.execute('action').subscribe((token) => {
+      this.ratesServices.getVehicleType(token).subscribe(
+        (res: any) => {
+          this.vehicleType = res;
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+    });
   }
-  
 
   ngOnInit(): void {
-    this.getVehicleType()
+    this.getVehicleType();
+    this.getCreatePermits();
+    this.getEditPermits();
+    this.getDeletePermits();
     this.dtOptions = {
+      responsive: true,
       processing: true,
       pagingType: 'full_numbers',
       pageLength: 10,
       language: {
-        url: "//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json"
+        url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json',
       },
       destroy: true,
       autoWidth: true,
-      order: [0, 'asc']
+      order: [1, 'asc'],
     };
   }
 
   ngAfterViewInit(): void {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
-        this.getRates(token)
+        this.getRates(token);
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   ngOnDestroy(): void {
@@ -114,9 +138,9 @@ export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
         (err) => {
           console.log(err);
         }
-      )
+      );
       dtInstance.destroy();
-    })
+    });
   }
 
   getRates(token: any) {
@@ -127,9 +151,9 @@ export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
         this.dtTrigger.next();
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   getRate(id: string) {
@@ -143,20 +167,26 @@ export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
           (error: any) => {
             console.log(error);
           }
-        )
+        );
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   saveRate() {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
         this.rate.token = token;
-        if (this.rate.minute_rate == '' || this.rate.hourly_rate == '' || this.rate.day_rate == '' || this.rate.rate_status == 0 || this.rate.fk_id_vehicle_type == 0) {
-          Swal.fire('Atención', 'Todos los campos son obligarios', 'error')
+        if (
+          this.rate.minute_rate == '' ||
+          this.rate.hourly_rate == '' ||
+          this.rate.day_rate == '' ||
+          this.rate.rate_status == 0 ||
+          this.rate.fk_id_vehicle_type == 0
+        ) {
+          Swal.fire('Atención', 'Todos los campos son obligarios', 'error');
         } else {
           delete this.rate.id_rate;
           delete this.rate.updated_att;
@@ -173,13 +203,11 @@ export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
                 Swal.fire('¡Error!', error['error']['message'], 'error');
               }
             }
-          )
+          );
         }
       },
-      (error: any) => {
-
-      }
-    )
+      (error: any) => {}
+    );
   }
 
   updateRate() {
@@ -198,12 +226,12 @@ export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
               Swal.fire('¡Error!', error['error']['message'], 'error');
             }
           }
-        )
+        );
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   deleteRate(id_rate: string) {
@@ -214,8 +242,8 @@ export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar'
-    }).then(result => {
+      confirmButtonText: 'Si, eliminar',
+    }).then((result) => {
       if (result.value) {
         this.recaptchaV3Service.execute('action').subscribe(
           (token) => {
@@ -232,14 +260,13 @@ export class RatesComponent implements AfterViewInit,OnDestroy,OnInit {
                   Swal.fire('¡Error!', error['message'], 'error');
                 }
               }
-            )
+            );
           },
           (error: any) => {
-            console.log(error)
+            console.log(error);
           }
-        )
+        );
       }
-    })
+    });
   }
-
 }

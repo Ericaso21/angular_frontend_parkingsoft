@@ -11,7 +11,7 @@ export const ketRecaptcha = {
 };
 
 export const API_URI = {
-  url: 'http://localhost:3000/api',
+  url: 'https://immense-scrubland-48656.herokuapp.com/api',
 };
 
 /*

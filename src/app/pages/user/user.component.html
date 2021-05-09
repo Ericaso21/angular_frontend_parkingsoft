@@ -1,168 +1,264 @@
 <!-- modal -->
 <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Usuarios</h4>
-        <button type="button" id="closeModal" class="close" aria-label="Close"
-            (click)="submitted = false; d('Cross click');close(); edit = false">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form autocomplete="off">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Nombres</label>
-                    <input type="text" name="first_name" placeholder="Nombres" class="form-control"
-                        [(ngModel)]="user.first_name">
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label">Apellidos</label>
-                    <input type="text" name="surname" placeholder="Apellidos" class="form-control"
-                        [(ngModel)]="user.surname">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Documento</label>
-                    <input class="form-control" type="text" name="user.document_number" placeholder="Documento"
-                        [(ngModel)]="user.document_number">
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label">Tipo de documento</label>
-                    <select name="pk_fk_id_document_type" class="form-control"
-                        [(ngModel)]="user.pk_fk_id_document_type">
-                        <option value="0">Seleccione...</option>
-                        <option *ngFor="let document_types of document_type" [value]="document_types.id_document_type">
-                            {{document_types.document_type_name}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Nombre Usuario</label>
-                    <input class="form-control" type="text" name="name_user" placeholder="Nombre usuario"
-                        [(ngModel)]="user.name_user">
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label">Genero</label>
-                    <select name="fk_id_gender" class="form-control" [(ngModel)]="user.fk_id_gender">
-                        <option value="0">Seleccione...</option>
-                        <option *ngFor="let genders of gender" [value]="genders.id_gender">
-                            {{genders.gender_acronym}}-{{genders.name_gender}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Email</label>
-                    <input class="form-control" type="email" name="email" placeholder="Correo electronico"
-                        [(ngModel)]="user.email">
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label">Contraseña</label>
-                    <input class="form-control" type="password" name="password_user" placeholder="Contraseña"
-                        [(ngModel)]="user.password_user" autocomplete="off">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label class="control-label">Tipo rol</label>
-                    <select class="form-control" name="pk_fk_id_roles" [(ngModel)]="user.pk_fk_id_roles">
-                        <option value="0">Seleecione...</option>
-                        <option *ngFor="let roles of role" [value]="roles.id_roles">{{roles.name_role}}</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label">Estado</label>
-                    <select class="form-control" name="roles_users_status" [(ngModel)]="user.roles_users_status">
-                        <option value="0">Seleccione...</option>
-                        <option value="1">Activo</option>
-                        <option value="2">Inactivo</option>
-                    </select>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark"
-            (click)="submitted = false; c('Save click'); close(); edit = false">
-            Cerrar
-        </button>
-        <button class="btn btn-success" (click)="edit ? updateUser() : saveUser()">
-            Guardar
-        </button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Usuarios</h4>
+    <button
+      type="button"
+      id="closeModal"
+      class="close"
+      aria-label="Close"
+      (click)="submitted = false; d('Cross click'); close(); edit = false"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label class="control-label">Nombres</label>
+          <input
+            type="text"
+            name="first_name"
+            placeholder="Nombres"
+            class="form-control"
+            [(ngModel)]="user.first_name"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">Apellidos</label>
+          <input
+            type="text"
+            name="surname"
+            placeholder="Apellidos"
+            class="form-control"
+            [(ngModel)]="user.surname"
+          />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label class="control-label">Documento</label>
+          <input
+            class="form-control"
+            type="text"
+            name="user.document_number"
+            placeholder="Documento"
+            [(ngModel)]="user.document_number"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">Tipo de documento</label>
+          <select
+            name="pk_fk_id_document_type"
+            class="form-control"
+            [(ngModel)]="user.pk_fk_id_document_type"
+          >
+            <option value="0">Seleccione...</option>
+            <option
+              *ngFor="let document_types of document_type"
+              [value]="document_types.id_document_type"
+            >
+              {{ document_types.document_type_name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label class="control-label">Nombre Usuario</label>
+          <input
+            class="form-control"
+            type="text"
+            name="name_user"
+            placeholder="Nombre usuario"
+            [(ngModel)]="user.name_user"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">Genero</label>
+          <select
+            name="fk_id_gender"
+            class="form-control"
+            [(ngModel)]="user.fk_id_gender"
+          >
+            <option value="0">Seleccione...</option>
+            <option *ngFor="let genders of gender" [value]="genders.id_gender">
+              {{ genders.gender_acronym }}-{{ genders.name_gender }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label class="control-label">Email</label>
+          <input
+            class="form-control"
+            type="email"
+            name="email"
+            placeholder="Correo electronico"
+            [(ngModel)]="user.email"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">Contraseña</label>
+          <input
+            class="form-control"
+            type="password"
+            name="password_user"
+            placeholder="Contraseña"
+            [(ngModel)]="user.password_user"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label class="control-label">Tipo rol</label>
+          <select
+            class="form-control"
+            name="pk_fk_id_roles"
+            [(ngModel)]="user.pk_fk_id_roles"
+          >
+            <option value="0">Seleecione...</option>
+            <option *ngFor="let roles of role" [value]="roles.id_roles">
+              {{ roles.name_role }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label">Estado</label>
+          <select
+            class="form-control"
+            name="roles_users_status"
+            [(ngModel)]="user.roles_users_status"
+          >
+            <option value="0">Seleccione...</option>
+            <option value="1">Activo</option>
+            <option value="2">Inactivo</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click'); close(); edit = false"
+    >
+      Cerrar
+    </button>
+    <button class="btn btn-success" (click)="edit ? updateUser() : saveUser()">
+      Guardar
+    </button>
+  </div>
 </ng-template>
 <!-- Page content -->
 <div class="container-fluid mt--7">
-    <!-- Table -->
-    <div class="row">
-        <div class="col">
-            <div class="card shadow">
-                <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">Usuarios</h3>
-                    <button class="btn btn-success btn-sm" (click)="open(content)">
-                        <i class="ni ni-fat-add">Crear usuario</i>
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-                            class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Acciones</th>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Documento</th>
-                                    <th scope="col">Tipo documento</th>
-                                    <th scope="col">Usuario</th>
-                                    <th scope="col">Nombres</th>
-                                    <th scope="col">Apellidos</th>
-                                    <th scope="col">Genero</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Rol</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col">Fecha creación</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let user of users; let indice = index">
-                                    <td>
-                                        <div class="btn-group btn-group-sm text-center">
-                                            <button class="btn btn-primary btn-sm" title="Editar"
-                                                (click)="getOne(user.document_number); open(content)">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm" title="Eliminar"
-                                                (click)="deleteUser(user.document_number)">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td>{{indice + 1}}</td>
-                                    <td>{{user.document_number}}</td>
-                                    <td>{{user.document_type_acronym}}</td>
-                                    <td>{{user.name_user}}</td>
-                                    <td>{{user.first_name}} {{user.second_name}}</td>
-                                    <td>{{user.surname}} {{user.second_surname}}</td>
-                                    <td>{{user.gender_acronym}}</td>
-                                    <td>{{user.email}}</td>
-                                    <td>{{user.name_role}}</td>
-                                    <td *ngIf="user.roles_users_status == 1; else opposite_case">
-                                        <span class="badge badge-success">Activo</span>
-                                    </td>
-                                    <ng-template #opposite_case>
-                                        <td>
-                                            <samp class="badge badge-danger">Inactivo</samp>
-                                        </td>
-                                    </ng-template>
-                                    <td>{{user.created_att}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div
+          class="card-header border-0 text-white d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Usuarios</h3>
+          <ng-template [ngIf]="_create">
+            <button
+              class="btn btn-success btn-sm"
+              (click)="open(content); edit = false"
+            >
+              <i class="ni ni-fat-add">Crear usuario</i>
+            </button>
+          </ng-template>
         </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+              class="table align-items-center table-flush"
+            >
+              <thead class="thead-light">
+                <tr>
+                  <ng-template
+                    [ngIf]="_edit == false && _delete == false"
+                    [ngIfElse]="loading"
+                  ></ng-template>
+                  <ng-template #loading
+                    ><th scope="col">Acciones</th></ng-template
+                  >
+                  <th scope="col">#</th>
+                  <th scope="col">Documento</th>
+                  <th scope="col">Tipo documento</th>
+                  <th scope="col">Usuario</th>
+                  <th scope="col">Nombres</th>
+                  <th scope="col">Apellidos</th>
+                  <th scope="col">Genero</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Rol</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Fecha creación</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of users; let indice = index">
+                  <ng-template
+                    [ngIf]="_edit == false && _delete == false"
+                    [ngIfElse]="loading2"
+                  ></ng-template>
+                  <ng-template #loading2>
+                    <td>
+                      <div class="btn-group btn-group-sm text-center">
+                        <ng-template [ngIf]="_edit">
+                          <button
+                            class="btn btn-primary btn-sm"
+                            title="Editar"
+                            (click)="
+                              getOne(user.document_number); open(content)
+                            "
+                          >
+                            <i class="fas fa-pencil-alt"></i>
+                          </button>
+                        </ng-template>
+                        <ng-template [ngIf]="_delete">
+                          <button
+                            class="btn btn-danger btn-sm"
+                            title="Eliminar"
+                            (click)="deleteUser(user.document_number)"
+                          >
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                        </ng-template>
+                      </div>
+                    </td>
+                  </ng-template>
+                  <td>{{ indice + 1 }}</td>
+                  <td>{{ user.document_number }}</td>
+                  <td>{{ user.document_type_acronym }}</td>
+                  <td>{{ user.name_user }}</td>
+                  <td>{{ user.first_name }} {{ user.second_name }}</td>
+                  <td>{{ user.surname }} {{ user.second_surname }}</td>
+                  <td>{{ user.gender_acronym }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.name_role }}</td>
+                  <td *ngIf="user.roles_users_status == 1; else opposite_case">
+                    <span class="badge badge-success">Activo</span>
+                  </td>
+                  <ng-template #opposite_case>
+                    <td>
+                      <samp class="badge badge-danger">Inactivo</samp>
+                    </td>
+                  </ng-template>
+                  <td>{{ user.created_att }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

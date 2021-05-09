@@ -2,32 +2,53 @@
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Roles</h4>
-    <button type="button" id="closeModal" class="close" aria-label="Close"
-      (click)="submitted = false; d('Cross click');close(); edit = false">
+    <button
+      type="button"
+      id="closeModal"
+      class="close"
+      aria-label="Close"
+      (click)="submitted = false; d('Cross click'); close(); edit = false"
+    >
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <form autocomplete="off">
-      <input type="hidden" name="id_roles" [(ngModel)]="role.id_roles">
+      <input type="hidden" name="id_roles" [(ngModel)]="role.id_roles" />
       <div class="form-row">
         <div class="form group col-md-12">
           <label class="control-label">Nombre</label>
-          <input class="form-control" type="text" name="name_role" [(ngModel)]="role.name_role" placeholder="Nombre rol"
-            autofocus>
+          <input
+            class="form-control"
+            type="text"
+            name="name_role"
+            [(ngModel)]="role.name_role"
+            placeholder="Nombre rol"
+            autofocus
+          />
         </div>
       </div>
       <div class="form-row">
         <div class="form-group col-md-12">
           <label class="control-label">Descripción</label>
-          <textarea class="form-control" name="description_role" [(ngModel)]="role.description_role" rows="2"
-            placeholder="Descripción del rol" required=""></textarea>
+          <textarea
+            class="form-control"
+            name="description_role"
+            [(ngModel)]="role.description_role"
+            rows="2"
+            placeholder="Descripción del rol"
+            required=""
+          ></textarea>
         </div>
       </div>
       <div class="form row">
         <div class="from-group col-md-12">
           <label class="control-label" for="role_status">Estado</label>
-          <select class="form-control" name="role_status" [(ngModel)]="role.role_status">
+          <select
+            class="form-control"
+            name="role_status"
+            [(ngModel)]="role.role_status"
+          >
             <option value="0">Seleccione...</option>
             <option value="1">Activo</option>
             <option value="2">Inactivo</option>
@@ -37,8 +58,11 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark"
-      (click)="submitted = false; c('Save click'); close(); edit = false">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click'); close(); edit = false"
+    >
       Cerrar
     </button>
     <button class="btn btn-success" (click)="edit ? updateRole() : saveRole()">
@@ -52,19 +76,33 @@
   <div class="row">
     <div class="col">
       <div class="card shadow">
-        <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
+        <div
+          class="card-header border-0 text-white d-flex justify-content-between align-items-center"
+        >
           <h3 class="mb-0">Roles</h3>
-          <button class="btn btn-success btn-sm" (click)="open(content)">
-            <i class="ni ni-fat-add">Crear roles</i>
-          </button>
+          <ng-template [ngIf]="_create">
+            <button class="btn btn-success btn-sm" (click)="open(content)">
+              <i class="ni ni-fat-add">Crear roles</i>
+            </button>
+          </ng-template>
         </div>
         <div class="card-body">
           <div class="table-responsive">
-            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-              class="table align-items-center table-flush">
+            <table
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+              class="table align-items-center table-flush"
+            >
               <thead class="thead-light">
                 <tr>
-                  <th scope="col">Acciones</th>
+                  <ng-template
+                    [ngIf]="_edit == false && _delete == false"
+                    [ngIfElse]="loading"
+                  ></ng-template>
+                  <ng-template #loading
+                    ><th scope="col">Acciones</th></ng-template
+                  >
                   <th scope="col">#</th>
                   <th scope="col">Nombre</th>
                   <th scope="col">Descripcion</th>
@@ -73,17 +111,34 @@
               </thead>
               <tbody>
                 <tr *ngFor="let role of roles; let indice = index">
-                  <td>
-                    <div class="btn-group btn-group-sm text-center">
-                      <button class="btn btn-primary btn-sm" title="Editar"
-                        (click)="getRole(role.id_roles); open(content)">
-                        <i class="fas fa-pencil-alt"></i>
-                      </button>
-                      <button class="btn btn-danger btn-sm" title="Eliminar" (click)="deleteRole(role.id_roles)">
-                        <i class="fas fa-trash-alt"></i>
-                      </button>
-                    </div>
-                  </td>
+                  <ng-template
+                    [ngIf]="_edit == false && _delete == false"
+                    [ngIfElse]="loading2"
+                  ></ng-template>
+                  <ng-template #loading2>
+                    <td>
+                      <div class="btn-group btn-group-sm text-center">
+                        <ng-template [ngIf]="_edit">
+                          <button
+                            class="btn btn-primary btn-sm"
+                            title="Editar"
+                            (click)="getRole(role.id_roles); open(content)"
+                          >
+                            <i class="fas fa-pencil-alt"></i>
+                          </button>
+                        </ng-template>
+                        <ng-template [ngIf]="_delete">
+                          <button
+                            class="btn btn-danger btn-sm"
+                            title="Eliminar"
+                            (click)="deleteRole(role.id_roles)"
+                          >
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                        </ng-template>
+                      </div>
+                    </td>
+                  </ng-template>
                   <td>{{ indice + 1 }}</td>
                   <td>{{ role.name_role }}</td>
                   <td>{{ role.description_role }}</td>

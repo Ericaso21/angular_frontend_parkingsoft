@@ -8,40 +8,53 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class LoginComponent implements OnDestroy, OnInit {
-
   //ngModel
   userAuthentication: Authentication | any = {
     token: '',
     email: '',
-    password_user: ''
-  }
+    password_user: '',
+  };
 
-  constructor(private authenticationService: AuthenticationService, private recaptchaV3Service: ReCaptchaV3Service, private encript: EncriptService, private router: Router) { }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private recaptchaV3Service: ReCaptchaV3Service,
+    private encript: EncriptService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  ngOnDestroy() {
-  }
+  ngOnDestroy() {}
 
   authentication() {
-    this.recaptchaV3Service.execute('action').subscribe(
-      (token) => {
-        this.userAuthentication.token = token;
-        this.userAuthentication.password_user = this.encript.set('123456$#@$^@1ERF', this.userAuthentication.password_user);
-        this.authenticationService.authentication(this.userAuthentication).subscribe(
+    this.recaptchaV3Service.execute('action').subscribe((token) => {
+      this.userAuthentication.token = token;
+      this.userAuthentication.password_user = this.encript.set(
+        '123456$#@$^@1ERF',
+        this.userAuthentication.password_user
+      );
+      this.authenticationService
+        .authentication(this.userAuthentication)
+        .subscribe(
           (res: any) => {
-            let times = { value: res['token'], timestamp: new Date().getTime() }
-            let user = { userName: btoa(res['singend_user']['first_name']), surname: btoa(res['singend_user']['surname']) }
-            let role = { email: btoa(res['singend_user']['email']) }
+            let times = {
+              value: res['token'],
+              timestamp: new Date().getTime(),
+            };
+            let user = {
+              userName: btoa(res['singend_user']['first_name']),
+              surname: btoa(res['singend_user']['surname']),
+            };
+            let role = { email: btoa(res['singend_user']['email']) };
+            let permit = res['permit'];
+            localStorage.setItem('permit', JSON.stringify(permit));
             localStorage.setItem('token', JSON.stringify(times));
             localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('role', JSON.stringify(role));
-            this.router.navigate(['/dashboard'])
+            this.router.navigate(['/dashboard']);
           },
           (error: any) => {
             if (error['status'] == 404) {
@@ -49,9 +62,7 @@ export class LoginComponent implements OnDestroy, OnInit {
               this.userAuthentication.password_user = '';
             }
           }
-        )
-      }
-    )
+        );
+    });
   }
-
 }

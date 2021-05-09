@@ -1,16 +1,22 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { DataTableDirective } from 'angular-datatables';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subject } from 'rxjs';
 import { Roles } from 'src/app/interfaces/roles';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { RolesService } from 'src/app/services/roles.service';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
   //dataTable configuraciones
@@ -28,18 +34,41 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
     name_role: '',
     description_role: '',
     role_status: 0,
-    created_att: new Date(),
-    updated_att: new Date()
-  }
+    created_att: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+    updated_att: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+  };
 
   //modal actualizar
   edit: boolean = false;
   //open modal
   submitted: boolean = false;
 
-  constructor(private rolesService: RolesService, private recaptchaV3Service: ReCaptchaV3Service, config: NgbModalConfig, private modalService: NgbModal) {
+  //permit
+  _create: any;
+  _edit: any;
+  _delete: any;
+
+  constructor(
+    private rolesService: RolesService,
+    private recaptchaV3Service: ReCaptchaV3Service,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
+    private authenticationService: AuthenticationService
+  ) {
     config.backdrop = 'static';
     config.keyboard = false;
+  }
+
+  getCreatePermits() {
+    this._create = this.authenticationService.getCreatePermits('Roles');
+  }
+
+  getEditPermits() {
+    this._edit = this.authenticationService.getEditPermits('Roles');
+  }
+
+  getDeletePermits() {
+    this._delete = this.authenticationService.getdeletePermits('Roles');
   }
 
   open(content: any) {
@@ -55,34 +84,37 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       description_role: '',
       role_status: 0,
       created_att: new Date(),
-      updated_att: new Date()
-    }
+      updated_att: new Date(),
+    };
   }
 
   ngOnInit(): void {
+    this.getCreatePermits();
+    this.getEditPermits();
+    this.getDeletePermits();
     this.dtOptions = {
       responsive: true,
       processing: true,
       pagingType: 'full_numbers',
       pageLength: 10,
       language: {
-        url: "//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json"
+        url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json',
       },
       destroy: true,
       autoWidth: true,
-      order: [1, 'asc']
+      order: [1, 'asc'],
     };
   }
 
   ngAfterViewInit(): void {
     this.recaptchaV3Service.execute('action').subscribe(
       (token) => {
-        this.getRoles(token)
+        this.getRoles(token);
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   ngOnDestroy(): void {
@@ -98,9 +130,9 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
         (err) => {
           console.log(err);
         }
-      )
+      );
       dtInstance.destroy();
-    })
+    });
   }
 
   getRoles(token: any) {
@@ -110,9 +142,9 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
         this.dtTrigger.next();
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   getRole(id_role: string) {
@@ -126,12 +158,12 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
           (error: any) => {
             console.log(error);
           }
-        )
+        );
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   saveRole() {
@@ -139,7 +171,7 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       (token) => {
         this.role.token = token;
         if (this.role.name_role == '') {
-          Swal.fire('Atención', 'Todos los campos son obligarios', 'error')
+          Swal.fire('Atención', 'Todos los campos son obligarios', 'error');
         } else {
           delete this.role.id_roles;
           delete this.role.updated_att;
@@ -156,13 +188,13 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
                 Swal.fire('¡Error!', error['error']['message'], 'error');
               }
             }
-          )
+          );
         }
       },
       (error: any) => {
         console.log(error);
       }
-    )
+    );
   }
 
   updateRole() {
@@ -181,12 +213,12 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
               Swal.fire('¡Error!', error['error']['message'], 'error');
             }
           }
-        )
+        );
       },
       (error: any) => {
-        console.log(error)
+        console.log(error);
       }
-    )
+    );
   }
 
   deleteRole(id_role: string) {
@@ -197,8 +229,8 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, eliminar'
-    }).then(result => {
+      confirmButtonText: 'Si, eliminar',
+    }).then((result) => {
       if (result.value) {
         this.recaptchaV3Service.execute('action').subscribe(
           (token) => {
@@ -215,14 +247,13 @@ export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
                   Swal.fire('¡Error!', error['error']['message'], 'error');
                 }
               }
-            )
+            );
           },
           (error: any) => {
-            console.log(error)
+            console.log(error);
           }
-        )
+        );
       }
-    })
+    });
   }
-
 }

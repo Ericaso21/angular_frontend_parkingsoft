@@ -1,10 +1,10 @@
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentsModule } from './components/components.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
@@ -12,15 +12,11 @@ import { AppRoutingModule } from './app.routing';
 import { TemplateComponent } from './layouts/template/template.component';
 import { DataTablesModule } from 'angular-datatables';
 import { RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha';
-import { ketRecaptcha } from '../environments/environment.prod';
+import { ketRecaptcha } from '../environments/environment';
 import { AuthComponent } from './layouts/auth/auth.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TemplateComponent,
-    AuthComponent
-  ],
+  declarations: [AppComponent, TemplateComponent, AuthComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -31,11 +27,9 @@ import { AuthComponent } from './layouts/auth/auth.component';
     RouterModule,
     AppRoutingModule,
     DataTablesModule,
-    RecaptchaV3Module
+    RecaptchaV3Module,
   ],
-  providers: [
-    { provide: RECAPTCHA_V3_SITE_KEY, useValue: ketRecaptcha.key }
-  ],
-  bootstrap: [AppComponent]
+  providers: [{ provide: RECAPTCHA_V3_SITE_KEY, useValue: ketRecaptcha.key }],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
