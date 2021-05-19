@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ROUTES } from '../sidebar/sidebar.component';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { API_URI } from 'src/environments/environment';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -13,6 +14,10 @@ export class NavbarComponent implements OnInit {
   public location: Location;
   public user: any = {};
   public userName: any;
+  imgURL: any;
+  responseLocalStorage: any;
+  private API_URI = API_URI.url;
+
   constructor(
     location: Location,
     public authenticationService: AuthenticationService
@@ -21,10 +26,22 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.imageProfile();
     this.listTitles = ROUTES.filter((listTitle) => listTitle);
     this.user = localStorage.getItem('user');
     let user = JSON.parse(this.user);
     this.userName = atob(user.userName) + ' ' + atob(user.surname);
+  }
+
+  imageProfile() {
+    this.responseLocalStorage = localStorage.getItem('role');
+    let img = JSON.parse(this.responseLocalStorage);
+    if (img.image === undefined) {
+      this.imgURL = null;
+    } else {
+      this.imgURL = `${this.API_URI}/public/static/img/user/${atob(img.image)}`;
+    }
+    console.log(this.imgURL);
   }
 
   getTitle() {

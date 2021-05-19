@@ -14,6 +14,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY } from 'ng-recaptcha';
 import { ketRecaptcha } from '../environments/environment';
 import { AuthComponent } from './layouts/auth/auth.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [AppComponent, TemplateComponent, AuthComponent],
@@ -28,6 +29,7 @@ import { AuthComponent } from './layouts/auth/auth.component';
     AppRoutingModule,
     DataTablesModule,
     RecaptchaV3Module,
+    ChartsModule,
   ],
   providers: [{ provide: RECAPTCHA_V3_SITE_KEY, useValue: ketRecaptcha.key }],
   bootstrap: [AppComponent],

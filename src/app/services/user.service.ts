@@ -12,6 +12,31 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+  getUserProfile(token: string, email: string) {
+    let headers = new HttpHeaders({ 'x-token': token });
+    return this.http.get(`${this.API_URI}/user/profile/${email}`, {
+      headers: headers,
+    });
+  }
+
+  updateUserProfile(userProfile: any, document_number: string) {
+    return this.http.put(
+      `${this.API_URI}/user/updateProfile/${document_number}`,
+      userProfile
+    );
+  }
+
+  updateUserProfileImage(file: any, token: string, document_number: string) {
+    let headers = new HttpHeaders({ 'x-token': token });
+    let fileImage = new FormData();
+    fileImage.append('File', file);
+    return this.http.post(
+      `${this.API_URI}/user/updateProfileImage/${document_number}`,
+      fileImage,
+      { headers: headers }
+    );
+  }
+
   getDocumentType(token: any) {
     let headers = new HttpHeaders({ 'x-token': token });
     return this.http.get(`${this.API_URI}/global/document_types`, {

@@ -21,6 +21,8 @@ import { RatesGuard } from 'src/app/guards/permit/rates.guard';
 import { TicketGuard } from 'src/app/guards/permit/ticket.guard';
 import { VehicleTypesGuard } from 'src/app/guards/permit/vehicle-types.guard';
 import { VehiclesGuard } from 'src/app/guards/permit/vehicles.guard';
+import { ProfileComponent } from 'src/app/pages/profile/profile.component';
+import { ClientComponent } from 'src/app/pages/client/client.component';
 
 export const TemplateRoutingModule: Routes = [
   {
@@ -54,4 +56,6 @@ export const TemplateRoutingModule: Routes = [
   },
   { path: 'ticket', component: TicketComponent, canActivate: [TicketGuard] },
   { path: 'blocks', component: BlocksComponent, canActivate: [BlocksGuard] },
+  { path: 'user-profile', component: ProfileComponent },
+  { path: 'client', component: ClientComponent },
 ];

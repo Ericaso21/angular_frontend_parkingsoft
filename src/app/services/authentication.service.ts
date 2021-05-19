@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { API_URI } from 'src/environments/environment';
 import { Authentication } from '../interfaces/authentication';
 import { Register } from '../interfaces/register';
+import { EncriptService } from './encript.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,13 +14,39 @@ export class AuthenticationService {
   private module: any[] = [];
   private permits: any[] = [];
   private permit: any;
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private encript: EncriptService
+  ) {}
+
+  resetPassword(emailPasswordUser: any) {
+    return this.http.put(
+      `${this.API_URI}/authentication/userResetPassword`,
+      emailPasswordUser
+    );
+  }
+
+  newPassword(newPassword: any) {
+    newPassword.newPassword = this.encript.set(
+      '123456$#@$^@1ERF',
+      newPassword.newPassword
+    );
+    return this.http.put(
+      `${this.API_URI}/authentication/newPassword`,
+      newPassword
+    );
+  }
 
   registerClient(client: Register) {
     return this.http.post(`${this.API_URI}/authentication/create`, client);
   }
 
   authentication(authentication: Authentication) {
+    authentication.password_user = this.encript.set(
+      '123456$#@$^@1ERF',
+      authentication.password_user
+    );
     return this.http.post(
       `${this.API_URI}/authentication/user/authentication`,
       authentication
@@ -32,11 +59,12 @@ export class AuthenticationService {
 
   logout() {
     localStorage.clear();
+    document.cookie = 'permit=' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     this.router.navigate(['/login']);
   }
 
   getPermits() {
-    this.permit = localStorage.getItem(`permit`);
+    this.permit = this.readCookie('permit');
     let permit = JSON.parse(this.permit);
     return permit;
   }
@@ -111,5 +139,20 @@ export class AuthenticationService {
         }
       }
     }
+  }
+
+  readCookie(name: any) {
+    var nameEQ = name + '=';
+    var ca = document.cookie.split(';');
+
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) {
+        return decodeURIComponent(c.substring(nameEQ.length, c.length));
+      }
+    }
+
+    return null;
   }
 }

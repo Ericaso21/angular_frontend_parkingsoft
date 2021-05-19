@@ -18,6 +18,8 @@ import { TicketComponent } from 'src/app/pages/ticket/ticket.component';
 import { BillComponent } from 'src/app/pages/bill/bill.component';
 import { VehicleComponent } from 'src/app/pages/vehicle/vehicle.component';
 import { BlocksComponent } from 'src/app/pages/blocks/blocks.component';
+import { ProfileComponent } from 'src/app/pages/profile/profile.component';
+import { ClientComponent } from 'src/app/pages/client/client.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { BlocksComponent } from 'src/app/pages/blocks/blocks.component';
     VehicleComponent,
     TicketComponent,
     BlocksComponent,
+    ProfileComponent,
+    ClientComponent,
   ],
 
   imports: [

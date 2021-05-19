@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { API_URI } from 'src/environments/environment';
 
 declare interface RouteInfo {
   path: string;
@@ -76,6 +77,12 @@ export const ROUTES: RouteInfo[] = [
     icon: 'ni ni-lock-circle-open text-primary',
     class: '',
   },
+  {
+    path: '/client',
+    title: 'Cliente',
+    icon: 'ni-single-02 text-primary',
+    class: '',
+  },
 ];
 
 @Component({
@@ -88,6 +95,9 @@ export class SidebarComponent implements OnInit {
   public isCollapsed = true;
   public permits: any[] = [];
   public permitdene: any[] = [];
+  imgURL: any;
+  responseLocalStorage: any;
+  private API_URI = API_URI.url;
 
   constructor(
     private router: Router,
@@ -96,9 +106,21 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPermit();
+    this.imageProfile();
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;
     });
+  }
+
+  imageProfile() {
+    this.responseLocalStorage = localStorage.getItem('role');
+    let img = JSON.parse(this.responseLocalStorage);
+    if (img.image === undefined) {
+      this.imgURL = null;
+    } else {
+      this.imgURL = `${this.API_URI}/public/static/img/user/${atob(img.image)}`;
+    }
+    console.log(this.imgURL);
   }
 
   logout() {

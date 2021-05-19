@@ -1,83 +1,149 @@
 <!-- modal -->
 <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Factura</h4>
-        <button type="button" id="closeModal" class="close" aria-label="Close"
-            (click)="submitted = false; d('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="submitted = false; c('Save click')">
-            Cerrar
-        </button>
-        <button class="btn btn-success">
-            Guardar
-        </button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Factura</h4>
+    <button
+      type="button"
+      id="closeModalbill"
+      class="close"
+      aria-label="Close"
+      (click)="submitted = false; d('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="col-md-12" id="htmlData">
+    <table class="table table-borderless">
+      <tr>
+        <th>Fecha</th>
+        <td>{{ billTicket?.date_bill }}</td>
+        <th>N° ticket</th>
+        <td>{{ billTicket?.id_ticket }}</td>
+      </tr>
+      <tr>
+        <th>Placa</th>
+        <td>{{ billTicket?.fk_id_vehicle }}</td>
+        <th>Bloque</th>
+        <td>{{ billTicket?.pk_fk_id_block }}</td>
+      </tr>
+      <tr>
+        <th>Cliente</th>
+        <td>{{ billTicket?.fk_document_number }}</td>
+        <th>Nombre</th>
+        <td>{{ billTicket?.first_name }} {{ billTicket?.surname }}</td>
+      </tr>
+      <tr>
+        <th>Hora entrada</th>
+        <td>{{ billTicket?.entry_time }}</td>
+        <th>Hora salida</th>
+        <td>{{ billTicket?.departure_time }}</td>
+      </tr>
+      <tr>
+        <th>Total tiempo</th>
+        <td>{{ billTicket?.total_time }}</td>
+        <th>Subtotal</th>
+        <td>{{ billTicket?.subtotal_value }}</td>
+      </tr>
+      <tr>
+        <th>Valor IVA</th>
+        <td>{{ billTicket?.iva_value }}</td>
+        <th>Total</th>
+        <td>{{ billTicket?.total_value }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click')"
+    >
+      Cerrar
+    </button>
+    <button class="btn btn-danger" (click)="downloadPDF()">Imprimir PDF</button>
+  </div>
 </ng-template>
 <!-- Page content -->
 <div class="container-fluid mt--7">
-    <!-- Table -->
-    <div class="row">
-        <div class="col">
-            <div class="card shadow">
-                <div class="card-header border-0 text-white d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">Factura</h3>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-                            class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Acciones</th>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Fecha</th>
-                                    <th scope="col">Hora entrada</th>
-                                    <th scope="col">Hora salida</th>
-                                    <th scope="col">Total tiempo</th>
-                                    <th scope="col">Bloque</th>
-                                    <th scope="col">Vehiculo</th>
-                                    <th scope="col">Documento</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Subtotal</th>
-                                    <th scope="col">Iva</th>
-                                    <th scope="col">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let bill of bills">
-                                    <td>
-                                        <div class="btn-group btn-group-sm text-center">
-                                            <button class="btn btn-primary btn-sm" title="Editar">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </button>
-                                            <button class="btn btn-danger btn-sm" title="Eliminar">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td>{{bill.id_bill}}</td>
-                                    <td>{{bill.date_bill}}</td>
-                                    <td>{{bill.entry_time}}</td>
-                                    <td>{{bill.departure_time}}</td>
-                                    <td>{{bill.total_time}}</td>
-                                    <td>{{bill.pk_fk_id_block}}</td>
-                                    <td>{{bill.fk_id_vehicle}}</td>
-                                    <td>{{bill.fk_document_number}}</td>
-                                    <td>{{bill.first_name}} {{bill.surname}}</td>
-                                    <td>{{bill.subtotal_value}}</td>
-                                    <td>{{bill.iva_value}}</td>
-                                    <td>{{bill.total_value}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div
+          class="
+            card-header
+            border-0
+            text-white
+            d-flex
+            justify-content-between
+            align-items-center
+          "
+        >
+          <h3 class="mb-0">Factura</h3>
         </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+              class="table align-items-center table-flush"
+            >
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Acciones</th>
+                  <th scope="col">#</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Hora entrada</th>
+                  <th scope="col">Hora salida</th>
+                  <th scope="col">Total tiempo</th>
+                  <th scope="col">Bloque</th>
+                  <th scope="col">Vehiculo</th>
+                  <th scope="col">Documento</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Subtotal</th>
+                  <th scope="col">Iva</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bill of bills">
+                  <td>
+                    <div class="btn-group btn-group-sm text-center">
+                      <button
+                        class="btn btn-primary btn-sm"
+                        (click)="getTicketBill(bill.id_bill); open(content)"
+                        title="Editar"
+                      >
+                        <i class="fas fa-eye"></i>
+                      </button>
+                      <button
+                        class="btn btn-danger btn-sm"
+                        (click)="deleteBill(bill.id_bill)"
+                        title="Eliminar"
+                      >
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </td>
+                  <td>{{ bill.id_bill }}</td>
+                  <td>{{ bill.date_bill }}</td>
+                  <td>{{ bill.entry_time }}</td>
+                  <td>{{ bill.departure_time }}</td>
+                  <td>{{ bill.total_time }}</td>
+                  <td>{{ bill.pk_fk_id_block }}</td>
+                  <td>{{ bill.fk_id_vehicle }}</td>
+                  <td>{{ bill.fk_document_number }}</td>
+                  <td>{{ bill.first_name }} {{ bill.surname }}</td>
+                  <td>{{ bill.subtotal_value }}</td>
+                  <td>{{ bill.iva_value }}</td>
+                  <td>{{ bill.total_value }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
