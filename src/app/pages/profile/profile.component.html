@@ -35,7 +35,7 @@
             <input
               #file
               type="file"
-              accept="image/*"
+              accept=".png, .jpg, .jpeg"
               (change)="preview(file.files)"
               style="display: none"
             />
@@ -123,6 +123,7 @@
                       type="email"
                       class="form-control form-control-alternative"
                       placeholder="Correo electronico"
+                      readonly="readonly"
                       [(ngModel)]="userProfileSave.email"
                       name="email"
                     />

@@ -12,6 +12,7 @@ import { EncriptService } from './encript.service';
 export class AuthenticationService {
   private API_URI = API_URI.url;
   private module: any[] = [];
+  userData: any;
   private permits: any[] = [];
   private permit: any;
   constructor(
@@ -19,6 +20,16 @@ export class AuthenticationService {
     private router: Router,
     private encript: EncriptService
   ) {}
+
+  getUserData() {
+    this.userData = localStorage.getItem('userData');
+    let userData = decodeURIComponent(this.userData);
+    return JSON.parse(userData);
+  }
+
+  getUserDataPost(data: any) {
+    return this.http.post(`${this.API_URI}/user/userData`, data);
+  }
 
   resetPassword(emailPasswordUser: any) {
     return this.http.put(

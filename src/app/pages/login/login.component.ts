@@ -81,25 +81,14 @@ export class LoginComponent implements OnDestroy, OnInit {
               value: res['token'],
               timestamp: new Date().getTime(),
             };
-            let user = {
-              userName: btoa(res['singend_user']['first_name']),
-              surname: btoa(res['singend_user']['surname']),
-            };
-            let role = {};
-            if (res['singend_user']['name_file'] === null) {
-              role = { email: btoa(res['singend_user']['email']) };
-            } else {
-              role = {
-                email: btoa(res['singend_user']['email']),
-                image: btoa(res['singend_user']['name_file']),
-              };
-            }
             let permit = res['permit'];
             document.cookie =
               'permit=' + encodeURIComponent(JSON.stringify(permit));
+            localStorage.setItem(
+              'userData',
+              encodeURIComponent(JSON.stringify(res['singend_user']))
+            );
             localStorage.setItem('token', JSON.stringify(times));
-            localStorage.setItem('user', JSON.stringify(user));
-            localStorage.setItem('role', JSON.stringify(role));
             if (res['singend_user']['pk_fk_id_roles'] === 3) {
               this.router.navigate(['/client']);
             } else {

@@ -96,7 +96,6 @@ export class SidebarComponent implements OnInit {
   public permits: any[] = [];
   public permitdene: any[] = [];
   imgURL: any;
-  responseLocalStorage: any;
   private API_URI = API_URI.url;
 
   constructor(
@@ -105,22 +104,20 @@ export class SidebarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.imageUserData();
     this.getPermit();
-    this.imageProfile();
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;
     });
   }
 
-  imageProfile() {
-    this.responseLocalStorage = localStorage.getItem('role');
-    let img = JSON.parse(this.responseLocalStorage);
-    if (img.image === undefined) {
+  imageUserData() {
+    let userData = this.authenticationService.getUserData();
+    if (userData.name_file === null || userData.name_file === undefined) {
       this.imgURL = null;
     } else {
-      this.imgURL = `${this.API_URI}/public/static/img/user/${atob(img.image)}`;
+      this.imgURL = `${this.API_URI}/public/static/img/user/${userData.name_file}`;
     }
-    console.log(this.imgURL);
   }
 
   logout() {

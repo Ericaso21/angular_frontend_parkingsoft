@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 import { API_URI } from 'src/environments/environment';
 import Swal from 'sweetalert2';
@@ -8,6 +10,7 @@ import Swal from 'sweetalert2';
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styles: [],
+  providers: [NavbarComponent],
 })
 export class ProfileComponent implements OnInit {
   userProfile: any;
@@ -32,12 +35,35 @@ export class ProfileComponent implements OnInit {
   };
   constructor(
     private userService: UserService,
-    private recaptchaV3Service: ReCaptchaV3Service
+    private recaptchaV3Service: ReCaptchaV3Service,
+    private authenticationService: AuthenticationService,
+    private navigation: NavbarComponent
   ) {}
 
   ngOnInit(): void {
     this.getUserProfile();
     this.getUserFrom();
+  }
+
+  public getUserDataLocal(): void {
+    this.recaptchaV3Service.execute('action').subscribe((token) => {
+      const form = {
+        token: token,
+        email: this.getEmail(),
+      };
+      this.authenticationService.getUserDataPost(form).subscribe(
+        (res: any) => {
+          localStorage.setItem(
+            'userData',
+            encodeURIComponent(JSON.stringify(res))
+          );
+          this.navigation.refreshPage();
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+    });
   }
 
   preview(files: any) {
@@ -59,9 +85,9 @@ export class ProfileComponent implements OnInit {
   }
 
   getEmail() {
-    this.email = localStorage.getItem('role');
-    let email = JSON.parse(this.email);
-    return atob(email.email);
+    const userData = this.authenticationService.getUserData();
+    this.email = userData.email;
+    return this.email;
   }
 
   updateImageprofile(file: any) {
@@ -74,7 +100,7 @@ export class ProfileComponent implements OnInit {
         )
         .subscribe(
           (res: any) => {
-            console.log(res);
+            this.getUserDataLocal();
           },
           (error: any) => {
             console.log(error);
@@ -133,10 +159,6 @@ export class ProfileComponent implements OnInit {
       this.userProfileSave.first_name =
         this.userProfileSave.first_name.split(' ')[0];
       this.userProfileSave.surname = this.userProfileSave.surname.split(' ')[0];
-      fetch(this.imgURL)
-        .then((res) => res.blob())
-        .then((res) => (this.userProfileSave.photo_user = res));
-      console.log(this.userProfileSave.photo_user);
       this.userService
         .updateUserProfile(
           this.userProfileSave,
@@ -145,8 +167,8 @@ export class ProfileComponent implements OnInit {
         .subscribe(
           (res: any) => {
             if (res['status']) {
-              Swal.fire('¡Perfil!', res['message'], 'success');
               this.edit = false;
+              this.getUserDataLocal();
             }
           },
           (error: any) => {
