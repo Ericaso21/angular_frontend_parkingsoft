@@ -10,6 +10,9 @@ import { DataTableDirective } from 'angular-datatables';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Subject } from 'rxjs';
 import { BillsService } from 'src/app/services/bills.service';
+import { jsPDF } from 'jspdf';
+import domtoimage from 'dom-to-image';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-bill',
@@ -23,6 +26,7 @@ export class BillComponent implements AfterViewInit, OnDestroy, OnInit {
   dtOptions: DataTables.Settings = {};
   // variable que guarda los datos
   bills: any;
+  billTicket: any;
   dtTrigger: Subject<any> = new Subject<any>();
 
   //open modal
@@ -86,6 +90,34 @@ export class BillComponent implements AfterViewInit, OnDestroy, OnInit {
     });
   }
 
+  downloadPDF() {
+    // Extraemos el
+    const DATA = window.document.getElementById('htmlData') as HTMLInputElement;
+    domtoimage.toPng(DATA).then((dataUrl) => {
+      let imagen = new Image();
+      imagen.src = dataUrl;
+      const bufferX = 180;
+      const bufferY = 10;
+      let pdf = new jsPDF('p', 'pt', 'a4');
+      pdf.addImage(imagen, bufferX, bufferY, 280, 170);
+      pdf.save(`${new Date().toISOString()}_tutorial.pdf`);
+    });
+  }
+
+  getTicketBill(id: string) {
+    this.recaptchaV3Service.execute('action').subscribe((token) => {
+      this.billsService.getTicket(token, id).subscribe(
+        (res: any) => {
+          this.billTicket = res;
+          console.log(this.billTicket);
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+    });
+  }
+
   getBills(token: any) {
     this.billsService.getBill(token).subscribe(
       (res: any) => {
@@ -96,5 +128,40 @@ export class BillComponent implements AfterViewInit, OnDestroy, OnInit {
         console.log(error);
       }
     );
+  }
+
+  deleteBill(id: string) {
+    Swal.fire({
+      title: 'Estas Seguro',
+      text: '¡No podras revertir esto!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar',
+    }).then((result) => {
+      if (result.value) {
+        this.recaptchaV3Service.execute('action').subscribe(
+          (token) => {
+            this.billsService.deleteBill(token, id).subscribe(
+              (res: any) => {
+                if (res['status']) {
+                  Swal.fire('Factura', res['message'], 'success');
+                  this.rerender();
+                }
+              },
+              (error: any) => {
+                if (error['status'] == 404) {
+                  Swal.fire('¡Error!', error['error']['message'], 'error');
+                }
+              }
+            );
+          },
+          (error: any) => {
+            console.log(error);
+          }
+        );
+      }
+    });
   }
 }

@@ -1,0 +1,100 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Editar vehiculo</h4>
+    <button
+      type="button"
+      id="closeModal"
+      class="close"
+      aria-label="Close"
+      (click)="submitted = false; d('Cross click'); close()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form autocomplete="off">
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <label>Placa vehiculo</label>
+          <input
+            type="text"
+            class="form-control"
+            name="vehicle_plate"
+            [(ngModel)]="clientUser.vehicle_plate"
+            placeholder="Placa vehiculo"
+          />
+        </div>
+        <div class="form-group col-md-12">
+          <label>Modelo vehiculo</label>
+          <input
+            type="text"
+            class="form-control"
+            name="model_number"
+            [(ngModel)]="clientUser.model_number"
+            placeholder="Modelo vehiculo"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click'); close()"
+    >
+      Cerrar
+    </button>
+    <button class="btn btn-success" (click)="updateVehicle()">Guardar</button>
+  </div>
+</ng-template>
+
+<div class="container-fluid mt--7">
+  <!-- Card stats -->
+  <div class="row">
+    <div
+      class="col-xl-4 col-lg-6"
+      *ngFor="let vehicleUser of vehicleUsers; let indice = index"
+    >
+      <div class="card text-center">
+        <div
+          class="card-header d-flex justify-content-between align-items-center"
+        >
+          {{ vehicleUser.vehicle_name }}
+          <input
+            #file
+            type="file"
+            accept="image/*"
+            (change)="preview(file.files, indice, vehicleUser.vehicle_plate)"
+            style="display: none"
+          />
+          <span style="color: red" *ngIf="message">{{ message }}</span>
+          <button (click)="file.click()" class="btn btn-info">
+            <i class="fas fa-camera"></i>
+          </button>
+        </div>
+        <ng-template
+          [ngIf]="vehicleUser.name_file === null"
+          [ngIfElse]="imagenElse"
+        >
+          <img
+            src="./assets/img/theme/default.png"
+            alt="Vehicle"
+            class="card-img-top"
+        /></ng-template>
+        <ng-template #imagenElse>
+          <img [src]="vehicleUser.name_file" alt="Vehicle" />
+        </ng-template>
+        <div class="card-body">
+          <p>Placa: {{ vehicleUser.vehicle_plate }}</p>
+          <p>Modelo: {{ vehicleUser.model_number }}</p>
+          <a
+            (click)="getVehicleUser(vehicleUser.vehicle_plate); open(content)"
+            class="btn btn-info btn-block"
+            >Editar {{ vehicleUser.vehicle_name }}</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

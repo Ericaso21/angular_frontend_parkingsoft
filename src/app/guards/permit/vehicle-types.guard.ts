@@ -8,7 +8,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 export class VehicleTypesGuard implements CanActivate {
   constructor(private authenticationService: AuthenticationService) {}
   canActivate() {
-    if (this.authenticationService.getViewPermits('Tipos de Vehiculos')) {
+    if (this.authenticationService.getViewPermits('Tipos de vehiculos')) {
       return true;
     } else {
       return false;
