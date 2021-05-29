@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ReCaptchaV3Service } from 'ng-recaptcha';
 import { Client } from 'src/app/interfaces/client';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ClientService } from 'src/app/services/client.service';
 import { API_URI } from 'src/environments/environment';
 import Swal from 'sweetalert2';
@@ -34,7 +35,8 @@ export class ClientComponent implements OnInit {
     private recaptchaV3Service: ReCaptchaV3Service,
     private clientService: ClientService,
     config: NgbModalConfig,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private authenticationService: AuthenticationService
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -98,10 +100,9 @@ export class ClientComponent implements OnInit {
 
   getvehicleUser() {
     this.recaptchaV3Service.execute('action').subscribe((token) => {
-      this.emailUser = localStorage.getItem('role');
-      let emailUser = JSON.parse(this.emailUser);
+      let emailUser = this.authenticationService.getUserData();
       const form = {
-        email: atob(emailUser.email),
+        email: emailUser.email,
       };
       this.clientService.getVehicle(form, token).subscribe(
         (res: any) => {
