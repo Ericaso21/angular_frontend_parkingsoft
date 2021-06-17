@@ -5,24 +5,21 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-
-
+import { HeadersComponent } from './headers/headers.component';
 
 @NgModule({
   declarations: [
     FooterComponent,
     NavbarComponent,
-    SidebarComponent
+    SidebarComponent,
+    HeadersComponent,
   ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    NgbModule
-  ],
+  imports: [CommonModule, RouterModule, NgbModule],
   exports: [
     FooterComponent,
     NavbarComponent,
-    SidebarComponent
-  ]
+    SidebarComponent,
+    HeadersComponent,
+  ],
 })
-export class ComponentsModule { }
+export class ComponentsModule {}

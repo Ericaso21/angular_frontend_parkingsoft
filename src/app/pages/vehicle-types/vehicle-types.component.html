@@ -1,0 +1,154 @@
+<!-- modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">tipo de vehiculos</h4>
+    <button
+      type="button"
+      id="closeModal"
+      class="close"
+      aria-label="Close"
+      (click)="submitted = false; d('Cross click'); close(); edit = false"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="vehicle_name">Nombre Tipo Vehiculo</label>
+          <input
+            type="text"
+            name="vehicle_name"
+            class="form-control"
+            placeholder="nombre Tipo Vehiculo"
+            [(ngModel)]="vehicleType.vehicle_name"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="status_vehicle">Estado Tipo Vehiculo</label>
+          <select
+            class="form-control"
+            name="status_vehicle"
+            [(ngModel)]="vehicleType.status_vehicle"
+          >
+            <option value="0">Seleccione...</option>
+            <option value="1">Activo</option>
+            <option value="2">Inactivo</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="submitted = false; c('Save click'); close(); edit = false"
+    >
+      Cerrar
+    </button>
+    <button
+      class="btn btn-success"
+      (click)="edit ? updatevehicleType() : savevehicleType()"
+    >
+      Guardar
+    </button>
+  </div>
+</ng-template>
+<!-- Page content -->
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div
+          class="card-header border-0 text-white d-flex justify-content-between align-items-center"
+        >
+          <h3 class="mb-0">Tipo de Vehiculos</h3>
+          <ng-template [ngIf]="_create">
+            <button class="btn btn-success btn-sm" (click)="open(content)">
+              <i class="ni ni-fat-add">Crear tipo de vehiculo</i>
+            </button>
+          </ng-template>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table
+              datatable
+              [dtOptions]="dtOptions"
+              [dtTrigger]="dtTrigger"
+              class="table align-items-center table-flush"
+            >
+              <thead class="thead-light">
+                <tr>
+                  <ng-template
+                    [ngIf]="_edit == false && _delete == false"
+                    [ngIfElse]="loading"
+                  ></ng-template>
+                  <ng-template #loading
+                    ><th scope="col">Acciones</th></ng-template
+                  >
+                  <th scope="col">#</th>
+                  <th scope="col">Tipo de Vechiculo</th>
+                  <th scope="col">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let vehicleType of vehicleTypes; let indice = index"
+                >
+                  <ng-template
+                    [ngIf]="_edit == false && _delete == false"
+                    [ngIfElse]="loading2"
+                  ></ng-template>
+                  <ng-template #loading2>
+                    <td>
+                      <div class="btn-group btn-group-sm text-center">
+                        <ng-template [ngIf]="_edit">
+                          <button
+                            class="btn btn-primary btn-sm"
+                            (click)="
+                              getOnevehicleType(vehicleType.id_vehicle_type);
+                              open(content)
+                            "
+                            title="Editar"
+                          >
+                            <i class="fas fa-pencil-alt"></i>
+                          </button>
+                        </ng-template>
+                        <ng-template [ngIf]="_delete">
+                          <button
+                            class="btn btn-danger btn-sm"
+                            (click)="
+                              deletevehicleType(vehicleType.id_vehicle_type)
+                            "
+                            title="Eliminar"
+                          >
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                        </ng-template>
+                      </div>
+                    </td>
+                  </ng-template>
+                  <td>{{ indice + 1 }}</td>
+                  <td>{{ vehicleType.vehicle_name }}</td>
+                  <td
+                    *ngIf="vehicleType.status_vehicle == 1; else opposite_case"
+                  >
+                    <span class="badge badge-success">Activo</span>
+                  </td>
+                  <ng-template #opposite_case>
+                    <td>
+                      <span class="badge badge-danger">Cerrado</span>
+                    </td>
+                  </ng-template>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

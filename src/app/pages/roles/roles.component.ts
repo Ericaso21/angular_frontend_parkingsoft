@@ -1,0 +1,273 @@
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import { DataTableDirective } from 'angular-datatables';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { Subject } from 'rxjs';
+import { Roles } from 'src/app/interfaces/roles';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { RolesService } from 'src/app/services/roles.service';
+import Swal from 'sweetalert2';
+@Component({
+  selector: 'app-roles',
+  templateUrl: './roles.component.html',
+  styles: [],
+})
+export class RolesComponent implements AfterViewInit, OnDestroy, OnInit {
+  //dataTable configuraciones
+  @ViewChild(DataTableDirective, { static: false })
+  dtElement!: DataTableDirective;
+  dtOptions: DataTables.Settings = {};
+  // variable que guarda los datos
+  roles: any;
+  dtTrigger: Subject<any> = new Subject<any>();
+
+  //definicion NgModel
+  role: Roles | any = {
+    token: '',
+    id_roles: 0,
+    name_role: '',
+    description_role: '',
+    role_status: 0,
+    created_att: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+    updated_att: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+  };
+
+  //modal actualizar
+  edit: boolean = false;
+  //open modal
+  submitted: boolean = false;
+
+  //permit
+  _create: any;
+  _edit: any;
+  _delete: any;
+
+  constructor(
+    private rolesService: RolesService,
+    private recaptchaV3Service: ReCaptchaV3Service,
+    config: NgbModalConfig,
+    private modalService: NgbModal,
+    private authenticationService: AuthenticationService
+  ) {
+    config.backdrop = 'static';
+    config.keyboard = false;
+  }
+
+  getCreatePermits() {
+    this._create = this.authenticationService.getCreatePermits('Roles');
+  }
+
+  getEditPermits() {
+    this._edit = this.authenticationService.getEditPermits('Roles');
+  }
+
+  getDeletePermits() {
+    this._delete = this.authenticationService.getdeletePermits('Roles');
+  }
+
+  open(content: any) {
+    this.modalService.open(content);
+  }
+
+  close() {
+    document.getElementById('closeModal')?.click();
+    this.role = {
+      token: '',
+      id_roles: 0,
+      name_role: '',
+      description_role: '',
+      role_status: 0,
+      created_att: new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, ''),
+      updated_att: new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, ''),
+    };
+  }
+
+  ngOnInit(): void {
+    this.getCreatePermits();
+    this.getEditPermits();
+    this.getDeletePermits();
+    this.dtOptions = {
+      responsive: true,
+      processing: true,
+      pagingType: 'full_numbers',
+      pageLength: 10,
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.10.22/i18n/Spanish.json',
+      },
+      destroy: true,
+      autoWidth: true,
+      order: [1, 'asc'],
+    };
+  }
+
+  ngAfterViewInit(): void {
+    this.recaptchaV3Service.execute('action').subscribe(
+      (token) => {
+        this.getRoles(token);
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  rerender(): void {
+    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      this.recaptchaV3Service.execute('action').subscribe(
+        (token) => {
+          this.getRoles(token);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+      dtInstance.destroy();
+    });
+  }
+
+  getRoles(token: any) {
+    this.rolesService.getRoles(token).subscribe(
+      (res: any) => {
+        this.roles = res;
+        this.dtTrigger.next();
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  getRole(id_role: string) {
+    this.recaptchaV3Service.execute('action').subscribe(
+      (token) => {
+        this.rolesService.getRole(token, id_role).subscribe(
+          (res: any) => {
+            this.role = res;
+            this.edit = true;
+          },
+          (error: any) => {
+            console.log(error);
+          }
+        );
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  saveRole() {
+    this.recaptchaV3Service.execute('action').subscribe(
+      (token) => {
+        this.role.token = token;
+        if (this.role.name_role == '') {
+          Swal.fire('Atención', 'Todos los campos son obligarios', 'error');
+        } else {
+          delete this.role.id_roles;
+          delete this.role.updated_att;
+          this.role.created_att = new Date()
+            .toISOString()
+            .replace(/T/, ' ')
+            .replace(/\..+/, '');
+          this.rolesService.saveRole(this.role).subscribe(
+            (res: any) => {
+              if (res['status']) {
+                Swal.fire('¡Role!', res['message'], 'success');
+                this.rerender();
+                this.close();
+              }
+            },
+            (error: any) => {
+              if (error['status'] == 404) {
+                Swal.fire('¡Error!', error['error']['message'], 'error');
+              }
+            }
+          );
+        }
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  updateRole() {
+    this.recaptchaV3Service.execute('action').subscribe(
+      (token) => {
+        this.role.token = token;
+        delete this.role.created_att;
+        this.role.updated_att = new Date()
+          .toISOString()
+          .replace(/T/, ' ')
+          .replace(/\..+/, '');
+        this.rolesService.updateRole(this.role.id_roles, this.role).subscribe(
+          (res: any) => {
+            Swal.fire('¡Role!', res['message'], 'success');
+            this.rerender();
+            this.close();
+          },
+          (error: any) => {
+            if (error['status'] == 404) {
+              Swal.fire('¡Error!', error['error']['message'], 'error');
+            }
+          }
+        );
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  deleteRole(id_role: string) {
+    Swal.fire({
+      title: 'Estas Seguro',
+      text: '¡No podras revertir esto!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar',
+    }).then((result) => {
+      if (result.value) {
+        this.recaptchaV3Service.execute('action').subscribe(
+          (token) => {
+            this.rolesService.deleteRole(token, id_role).subscribe(
+              (res: any) => {
+                if (res['status']) {
+                  Swal.fire('Eliminado', res['message'], 'success');
+                  this.rerender();
+                  this.edit = false;
+                }
+              },
+              (error: any) => {
+                if (error['status'] == 404) {
+                  Swal.fire('¡Error!', error['error']['message'], 'error');
+                }
+              }
+            );
+          },
+          (error: any) => {
+            console.log(error);
+          }
+        );
+      }
+    });
+  }
+}

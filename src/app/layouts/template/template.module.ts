@@ -7,20 +7,46 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ClipboardModule } from 'ngx-clipboard';
 import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component';
-
-
-
+import { RolesComponent } from 'src/app/pages/roles/roles.component';
+import { DataTablesModule } from 'angular-datatables';
+import { BlockTypesComponent } from 'src/app/pages/block-types/block-types.component';
+import { RatesComponent } from 'src/app/pages/rates/rates.component';
+import { VehicleTypesComponent } from 'src/app/pages/vehicle-types/vehicle-types.component';
+import { UserComponent } from 'src/app/pages/user/user.component';
+import { AcessPermitComponent } from 'src/app/pages/acess-permit/acess-permit.component';
+import { TicketComponent } from 'src/app/pages/ticket/ticket.component';
+import { BillComponent } from 'src/app/pages/bill/bill.component';
+import { VehicleComponent } from 'src/app/pages/vehicle/vehicle.component';
+import { BlocksComponent } from 'src/app/pages/blocks/blocks.component';
+import { ProfileComponent } from 'src/app/pages/profile/profile.component';
+import { ClientComponent } from 'src/app/pages/client/client.component';
+import { ChartsModule } from 'ng2-charts';
 @NgModule({
   declarations: [
-    DashboardComponent
+    DashboardComponent,
+    RolesComponent,
+    BlockTypesComponent,
+    RatesComponent,
+    VehicleTypesComponent,
+    UserComponent,
+    AcessPermitComponent,
+    BillComponent,
+    VehicleComponent,
+    TicketComponent,
+    BlocksComponent,
+    ProfileComponent,
+    ClientComponent,
   ],
+
   imports: [
     CommonModule,
     RouterModule.forChild(TemplateRoutingModule),
     FormsModule,
     HttpClientModule,
     NgbModule,
-    ClipboardModule
-  ]
+    ClipboardModule,
+    DataTablesModule,
+    ChartsModule,
+  ],
 })
-export class TemplateModule { }
+export class TemplateModule {}
