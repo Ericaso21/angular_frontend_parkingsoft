@@ -40,9 +40,9 @@
               *ngFor="let vehicle of vehicles"
               [value]="vehicle.vehicle_plate"
             >
-              {{ vehicle.vehicle_plate }}-{{ vehicle.document_number }}-{{
-                vehicle.first_name
-              }}-{{ vehicle.surname }}
+              {{ vehicle.vehicle_name }}-{{ vehicle.vehicle_plate }}-{{
+                vehicle.document_number
+              }}-{{ vehicle.first_name }}-{{ vehicle.surname }}
             </option>
           </select>
         </div>
@@ -93,7 +93,14 @@
     <div class="col">
       <div class="card shadow">
         <div
-          class="card-header border-0 text-white d-flex justify-content-between align-items-center"
+          class="
+            card-header
+            border-0
+            text-white
+            d-flex
+            justify-content-between
+            align-items-center
+          "
         >
           <h3 class="mb-0">Ticket</h3>
           <ng-template [ngIf]="_create">

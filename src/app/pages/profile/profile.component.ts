@@ -4,7 +4,6 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 import { API_URI } from 'src/environments/environment';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile',

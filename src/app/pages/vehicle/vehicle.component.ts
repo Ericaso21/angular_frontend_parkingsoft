@@ -81,12 +81,18 @@ export class VehicleComponent implements AfterViewInit, OnDestroy, OnInit {
     this.vehicle = {
       token: '',
       vehicle_plate: '',
-      fk_document_number: '',
+      fk_document_number: 0,
       fk_id_vehicle_type: 0,
       model_number: '',
       vehicle_status: 0,
-      created_att: new Date(),
-      updated_att: new Date(),
+      created_att: new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, ''),
+      updated_att: new Date()
+        .toISOString()
+        .replace(/T/, ' ')
+        .replace(/\..+/, ''),
     };
   }
 
@@ -159,7 +165,6 @@ export class VehicleComponent implements AfterViewInit, OnDestroy, OnInit {
     this.vehicleServices.getVehicles(token).subscribe(
       (res: any) => {
         this.vehicles = res;
-        console.log(this.vehicles);
         this.dtTrigger.next();
       },
       (error: any) => {

@@ -23,6 +23,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
   dtOptions: DataTables.Settings | any = {};
   // variable que guarda los datos
   reports: any;
+  report_filter: any = [];
   dtTrigger: Subject<any> = new Subject<any>();
 
   //modal actualizar
@@ -34,6 +35,16 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
   iva: any;
   total: any;
 
+  //filter data
+  filter = {
+    token: '',
+    data_begin: new Date(),
+    data_end: new Date(),
+  };
+
+  // open filter
+  filter_dates: boolean = false;
+
   constructor(
     private recaptchaV3Service: ReCaptchaV3Service,
     private authenticationService: AuthenticationService,
@@ -42,6 +53,32 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
 
   getCreatePermits() {
     this._create = this.authenticationService.getCreatePermits('Dashboard');
+  }
+
+  filterData() {
+    this.recaptchaV3Service.execute('action').subscribe((token) => {
+      this.filter.token = token;
+      this.reportService.filerData(this.filter).subscribe(
+        (res: any) => {
+          if (this.report_filter === '') {
+            this.rerender();
+            this.report_filter = res;
+            this.reports = res;
+            this.dtTrigger.next();
+            this.ngAfterViewInit();
+          } else {
+            this.rerender();
+            this.report_filter = res;
+            this.reports = res;
+            this.dtTrigger.next();
+            this.ngAfterViewInit();
+          }
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+    });
   }
 
   ngOnInit(): void {
@@ -108,16 +145,27 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   getReport(token: any) {
-    this.reportService.getReport(token).subscribe(
-      (res: any) => {
-        this.reports = res;
-        this.getTotalReport(res);
-        this.dtTrigger.next();
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
+    if (this.report_filter.length === 0) {
+      this.reportService.getReport(token).subscribe(
+        (res: any) => {
+          this.reports = res;
+          this.getTotalReport(res);
+          this.dtTrigger.next();
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+    } else {
+      this.report_filter;
+      this.filter_dates = false;
+      this.getTotalReport(this.report_filter);
+      this.filter = {
+        token: '',
+        data_begin: new Date(),
+        data_end: new Date(),
+      };
+    }
   }
 
   getTotalReport(reports: any) {
@@ -129,7 +177,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy, OnInit {
       iva += parseFloat(reports[i]['iva_value']);
       total += parseFloat(reports[i]['total_value']);
     }
-    this.sub_total = subtotal;
+    this.sub_total = subtotal.toFixed(3);
     this.iva = iva;
     this.total = total;
   }

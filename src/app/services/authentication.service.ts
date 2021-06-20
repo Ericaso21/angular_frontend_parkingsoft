@@ -11,10 +11,11 @@ import { EncriptService } from './encript.service';
 })
 export class AuthenticationService {
   private API_URI = API_URI.url;
-  private module: any[] = [];
   userData: any;
   private permits: any[] = [];
   private permit: any;
+  private expired: any = {};
+  private role: any = {};
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -165,5 +166,31 @@ export class AuthenticationService {
     }
 
     return null;
+  }
+
+  public get sessionExpired(): boolean {
+    if (localStorage.getItem('token') !== null) {
+      this.expired = localStorage.getItem('token');
+      let expired = JSON.parse(this.expired);
+      this.role = this.getUserData();
+      if (
+        expired.timestamp &&
+        new Date().getTime() - expired.timestamp > 8 * 60 * 60 * 1000
+      ) {
+        localStorage.clear();
+        return false;
+      } else {
+        if (this.role.pk_fk_id_roles === 3) {
+          this.router.navigate(['/client']);
+          return true;
+        } else {
+          this.router.navigate(['/dashboard']);
+          return true;
+        }
+      }
+    } else {
+      this.router.navigate(['/login']);
+      return false;
+    }
   }
 }
