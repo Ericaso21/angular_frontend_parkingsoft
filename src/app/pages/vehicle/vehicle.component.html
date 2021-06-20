@@ -72,7 +72,7 @@
           <label class="control-label">Documento</label>
           <select
             class="form-control"
-            name="fk_id_vehicle_type "
+            name="fk_document_number"
             [(ngModel)]="vehicle.fk_document_number"
           >
             <option value="0">Seleccione</option>
@@ -112,7 +112,14 @@
     <div class="col">
       <div class="card shadow">
         <div
-          class="card-header border-0 text-white d-flex justify-content-between align-items-center"
+          class="
+            card-header
+            border-0
+            text-white
+            d-flex
+            justify-content-between
+            align-items-center
+          "
         >
           <h3 class="mb-0">Vehiculos</h3>
           <ng-template [ngIf]="_create">

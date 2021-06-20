@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-auth',
@@ -10,7 +11,10 @@ export class AuthComponent implements OnDestroy, OnInit {
   test: Date = new Date();
   public isCollapsed = true;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authenticationServices: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
     var html = document.getElementsByTagName('html')[0];
@@ -20,6 +24,7 @@ export class AuthComponent implements OnDestroy, OnInit {
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;
     });
+    this.authenticationServices.sessionExpired;
   }
 
   ngOnDestroy() {
