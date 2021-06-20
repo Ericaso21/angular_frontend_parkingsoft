@@ -13,4 +13,8 @@ export class ReportService {
     let headers = new HttpHeaders({ 'x-token': token });
     return this.http.get(`${this.API_URI}/reports/list`, { headers: headers });
   }
+
+  filerData(filter: any) {
+    return this.http.post(`${this.API_URI}/reports/filter`, filter);
+  }
 }

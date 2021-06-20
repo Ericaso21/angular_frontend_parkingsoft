@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-template',
@@ -6,7 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styles: [],
 })
 export class TemplateComponent implements OnInit {
-  constructor() {}
+  constructor(private athenticationServices: AuthenticationService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.athenticationServices.sessionExpired;
+  }
 }

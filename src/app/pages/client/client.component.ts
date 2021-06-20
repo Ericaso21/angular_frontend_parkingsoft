@@ -22,6 +22,8 @@ export class ClientComponent implements OnInit {
   plate_vehicle: any;
   public message: string | undefined;
   fileImage: any;
+  errorMessage: any;
+  errorMessageStatus: boolean = false;
 
   //ngModel
   clientUser: Client | any = {
@@ -119,6 +121,8 @@ export class ClientComponent implements OnInit {
         },
         (error: any) => {
           if (error['status'] == 404) {
+            this.errorMessage = error['error']['message'];
+            this.errorMessageStatus = true;
             Swal.fire('¡Error!', error['error']['message'], 'error');
           }
         }

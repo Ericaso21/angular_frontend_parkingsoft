@@ -15,10 +15,49 @@
           "
         >
           <h3 class="mb-0">Reportes</h3>
-          <ng-template [ngIf]="_create">
-            <button class="btn btn-success btn-sm">
+          <ng-template [ngIf]="_create && filter_dates === false">
+            <button
+              class="btn btn-success btn-sm"
+              (click)="filter_dates = true"
+            >
               <i class="ni ni-fat-add">Generar reporte</i>
             </button>
+          </ng-template>
+          <ng-template [ngIf]="filter_dates">
+            <hr class="my-3" />
+            <div style="margin-left: 120px">
+              <form class="form-inline">
+                <label for="data_end" class="mr-sm-2" style="color: black"
+                  >Fecha inicio</label
+                >
+                <input
+                  type="date"
+                  name="data_end"
+                  class="form-control mr-sm-2"
+                  [(ngModel)]="filter.data_end"
+                />
+                <label for="data_begin" class="mr-sm-2" style="color: black"
+                  >Fecha fin</label
+                >
+                <input
+                  type="date"
+                  name="data_begin"
+                  class="form-control mr-sm-2"
+                  [(ngModel)]="filter.data_begin"
+                />
+                <button class="btn btn-success ml-sm-2" (click)="filterData()">
+                  Guardar
+                </button>
+                <button
+                  class="btn btn-danger ml-sm-2"
+                  (click)="filter_dates = false"
+                >
+                  Cerrar
+                </button>
+              </form>
+            </div>
+
+            <hr class="my-3" />
           </ng-template>
         </div>
         <div class="card-body">
